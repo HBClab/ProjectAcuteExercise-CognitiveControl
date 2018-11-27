@@ -9,9 +9,10 @@ output:
     html_preview: false
 ---
 
+**Citation**: Weng, T. B., Pierce, G. L., Darling, W. G., & Voss, M. W. (2015). Differential effects of acute exercise on distinct aspects of executive function. Medicine and science in sports and exercise, 47(7), 1460-1469.
 
 
-# Setup
+# setup
 Clear previous, load packages
 ```{r, include=FALSE}
 
