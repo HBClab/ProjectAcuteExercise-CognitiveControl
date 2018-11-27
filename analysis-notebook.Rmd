@@ -1,0 +1,561 @@
+---
+title: 'R Notebook - data from MSSE Weng et al., 2015'
+author: "Michelle Voss"
+date: "Nov 2018"
+output:
+  github_document:
+    toc: true
+    toc_depth: 1
+    html_preview: false
+---
+
+
+
+# Setup
+Clear previous, load packages
+```{r, include=FALSE}
+
+rm(list=ls(all=TRUE))  #clear previous
+  
+library(car)
+library(ggplot2)
+library(knitr)
+library(reshape2)
+library(Hmisc)
+library(psych)
+library(afex)
+library(tidyverse)  #load last, and dplyr comes with it
+library(foreign)
+library(jtools)
+```
+
+
+## Load data from an spss file
+Do not show in knit
+
+```{r, include=FALSE}
+data <- read.spss("acute_beh_analysis_50.sav",use.value.labels = TRUE, to.data.frame = TRUE)
+attr(data, "variable.labels")
+write.csv(data,"acute_beh_data_weng-etal-2015.csv",row.names=FALSE)
+```
+
+
+
+
+# demographics in Table 1
+```{r}
+demogs <- data %>% 
+        select(age,gender,edu,height,weight,bmi,Godin_score) 
+
+describe(demogs)
+describeBy(demogs,group="gender")
+```
+
+
+
+
+# paired t-tests for exercise conditions
+
+```{r}
+exercise_data <- data[,c(1:3,18:27)]
+
+```
+
+## Exercise HR
+```{r}
+describe(exercise_data[,10:11])
+
+t.test(exercise_data$avgHR_passive, 
+       exercise_data$avgHR_active, 
+       paired=TRUE, 
+       conf.level=0.95)
+```
+
+## Exercise %HRmax
+```{r}
+describe(exercise_data[,12:13])
+
+t.test(exercise_data$hrmax_pass, 
+       exercise_data$hrmax_act, 
+       paired=TRUE, 
+       conf.level=0.95)
+```
+
+
+## RPE
+```{r}
+describe(exercise_data[,4:5])
+
+t.test(exercise_data$avgRPE_passive, 
+       exercise_data$avgRPE_active, 
+       paired=TRUE, 
+       conf.level=0.95)
+```
+
+
+
+## FAS
+```{r}
+describe(exercise_data[,8:9])
+
+t.test(exercise_data$avgFAS_passive, 
+       exercise_data$avgFAS_active, 
+       paired=TRUE, 
+       conf.level=0.95)
+```
+
+
+## FS
+```{r}
+describe(exercise_data[,6:7])
+
+t.test(exercise_data$avgFS_passive, 
+       exercise_data$avgFS_active, 
+       paired=TRUE, 
+       conf.level=0.95)
+```
+
+
+
+
+# Cognitive outcomes
+* percdiff=((post-pre)/pre)*100
+
+## n-back
+```{r}
+nback_prepost <- data %>%
+        filter(exclude=="include") %>%
+        select(sub,countergroup,pre_passive_1B_acc:percdiff_active_2B_RT) %>%
+        select(sub,countergroup,matches("pre|post")) %>%
+        gather(key=condition,value=perf,-sub,-countergroup)
+
+# now split condition column up to it's factors
+nback_prepost<- mutate(nback_prepost,dvtype=
+                                   ifelse(grepl("acc",condition),"acc","rt"))
+nback_prepost<- mutate(nback_prepost,time=
+                                   ifelse(grepl("pre",condition),"pre","post"))
+nback_prepost<- mutate(nback_prepost,intensity=
+                                   ifelse(grepl("passive",condition),"passive","active"))
+nback_prepost<- mutate(nback_prepost,load=
+                                   ifelse(grepl("1B",condition),"1B","2B"))
+
+write.csv(nback_prepost,"acute_nback-prepost_weng-etal-2015.csv",row.names=FALSE)
+```
+
+
+```{r}
+nback_percdiff <- data %>%
+        filter(exclude=="include") %>%
+        select(sub,countergroup,pre_passive_1B_acc:percdiff_active_2B_RT) %>%
+        select(sub,countergroup,matches("percdiff")) %>%
+        gather(key=condition,value=perf,-sub,-countergroup)
+
+# now split condition column up to it's factors
+nback_percdiff<- mutate(nback_percdiff,dvtype=
+                                   ifelse(grepl("acc",condition),"acc","rt"))
+nback_percdiff<- mutate(nback_percdiff,intensity=
+                                   ifelse(grepl("passive",condition),"passive","active"))
+nback_percdiff<- mutate(nback_percdiff,load=
+                                   ifelse(grepl("1B",condition),"1B","2B"))
+write.csv(nback_percdiff,"acute_nback-percdiff_weng-etal-2015.csv",row.names=FALSE)
+
+```
+
+
+### set factors
+```{r}
+nback_prepost$time <- as.factor(nback_prepost$time)
+nback_prepost$time <- relevel(nback_prepost$time,"pre")
+nback_prepost$intensity <- as.factor(nback_prepost$intensity)
+nback_prepost$intensity <- relevel(nback_prepost$intensity,"passive")
+nback_prepost$load <- as.factor(nback_prepost$load)
+
+nback_percdiff$intensity <- as.factor(nback_percdiff$intensity)
+nback_percdiff$intensity <- relevel(nback_percdiff$intensity,"passive")
+nback_percdiff$load <- as.factor(nback_percdiff$load)
+```
+
+
+### plot nback
+```{r}
+ggplot(subset(nback_prepost,dvtype=="acc"), aes(x=time,y=perf,group=sub)) + 
+  geom_line() + 
+  geom_point() +
+        facet_grid(~intensity*load) +
+        labs(title="Accuracy",y="Accuracy") + 
+        theme(strip.text = element_text(face="bold", size=15,lineheight=5.0), 
+        strip.background = element_rect(colour="black", size=1))
+```
+
+```{r}
+ggplot(subset(nback_prepost,dvtype=="rt"), aes(x=time,y=perf,group=sub)) + 
+  geom_line() + 
+  geom_point() +
+        facet_grid(~intensity*load) +
+        labs(title="Reaction Time",y="RT") + 
+        theme(strip.text = element_text(face="bold", size=15,lineheight=5.0), 
+        strip.background = element_rect(colour="black", size=1))
+```
+
+
+```{r}
+ggplot(subset(nback_percdiff,dvtype=="rt"), aes(x=intensity,y=perf,fill=load)) + 
+  scale_fill_manual(values=c("#E3871C", "#F5BD78")) +
+  geom_boxplot() + 
+  labs(title="Acute RT %change on N-back",y="%Diff",x="",fill="load") +
+  theme(title=element_text(size=16, face='bold'),
+        axis.text.x = element_text(size=16),
+        axis.text.y = element_text(size=15),
+        axis.title.y = element_text(size=16),
+        legend.text = element_text(size=15),
+        legend.title = element_text(size=15))
+
+ggplot(subset(nback_percdiff,dvtype=="rt"), aes(x=intensity,y=perf)) + 
+  stat_summary(aes(y = perf), size=.5, fun.y = mean, geom="bar",size=1) + 
+  stat_summary(fun.data=mean_cl_normal, geom="errorbar", size=.5,width=.3) + 
+        facet_grid(~load) +
+        labs(title="Acute RT %change on N-back",y="%Diff",x="") +
+        theme(title=element_text(size=16, face='bold'),
+        axis.text.x = element_text(size=16),
+        axis.text.y = element_text(size=15),
+        axis.title.y = element_text(size=16),
+        legend.text = element_text(size=15),
+        legend.title = element_text(size=15))
+
+ggplot(subset(nback_percdiff,dvtype=="rt"), aes(x=load,y=perf)) + 
+  stat_summary(aes(y = perf), size=.5, fun.y = mean, geom="bar",size=1) + 
+  stat_summary(fun.data=mean_cl_normal, geom="errorbar", size=.5,width=.3) + 
+        facet_grid(~intensity) +
+        labs(title="Acute RT %change on N-back",y="%Diff",x="") +
+        theme(title=element_text(size=16, face='bold'),
+        axis.text.x = element_text(size=16),
+        axis.text.y = element_text(size=15),
+        axis.title.y = element_text(size=16),
+        legend.text = element_text(size=15),
+        legend.title = element_text(size=15))
+```
+
+```{r}
+ggplot(subset(nback_percdiff,dvtype=="acc"), aes(x=intensity,y=perf,fill=load)) + 
+  scale_fill_manual(values=c("#E3871C", "#F5BD78")) +
+  geom_boxplot() + 
+  labs(title="Acute ACC %change on N-back",y="%Diff",x="",fill="load") +
+  theme(title=element_text(size=16, face='bold'),
+        axis.text.x = element_text(size=16),
+        axis.text.y = element_text(size=15),
+        axis.title.y = element_text(size=16),
+        legend.text = element_text(size=15),
+        legend.title = element_text(size=15))
+
+ggplot(subset(nback_percdiff,dvtype=="acc"), aes(x=intensity,y=perf)) + 
+  stat_summary(aes(y = perf), size=.5, fun.y = mean, geom="bar",size=1) + 
+  stat_summary(fun.data=mean_cl_normal, geom="errorbar", size=.5,width=.3) + 
+        facet_grid(~load) +
+        labs(title="Acute ACC %change on N-back",y="%Diff",x="") +
+        theme(title=element_text(size=16, face='bold'),
+        axis.text.x = element_text(size=16),
+        axis.text.y = element_text(size=15),
+        axis.title.y = element_text(size=16),
+        legend.text = element_text(size=15),
+        legend.title = element_text(size=15))
+
+ggplot(subset(nback_percdiff,dvtype=="acc"), aes(x=load,y=perf)) + 
+  stat_summary(aes(y = perf), size=.5, fun.y = mean, geom="bar",size=1) + 
+  stat_summary(fun.data=mean_cl_normal, geom="errorbar", size=.5,width=.3) + 
+        facet_grid(~intensity) +
+        labs(title="Acute ACC %change on N-back",y="%Diff",x="") +
+        theme(title=element_text(size=16, face='bold'),
+        axis.text.x = element_text(size=16),
+        axis.text.y = element_text(size=15),
+        axis.title.y = element_text(size=16),
+        legend.text = element_text(size=15),
+        legend.title = element_text(size=15))
+```
+
+
+### nback stats
+
+#### repeated measures anova with time as a factor
+```{r}
+aovACC<-aov_car(perf~time*intensity*load+Error(sub/time*intensity*load),subset(nback_prepost,dvtype=="acc"))
+nice(aovACC)
+```
+
+
+#### repeated measures anova with percentdiff 
+
+**reaction time**
+```{r}
+aovRT<-aov_car(perf~intensity*load+Error(sub/intensity*load),subset(nback_percdiff,dvtype=="rt"))
+nice(aovRT)
+aovRT_fitted<-lsmeans(aovRT,~load|intensity)
+aovRT_fitted
+pairs(aovRT_fitted)
+```
+
+
+**accuracy**
+```{r}
+aovACC<-aov_car(perf~intensity*load+Error(sub/intensity*load),subset(nback_percdiff,dvtype=="acc"))
+nice(aovACC)
+aovACC_fitted<-lsmeans(aovACC,~load|intensity)
+aovACC_fitted
+pairs(aovACC_fitted)
+```
+
+**Accuracy with glm and covariates **
+
+Set to effect coding
+```{r}
+contrasts(nback_prepost$time) <- c(-.5,.5)
+contrasts(nback_prepost$time)
+contrasts(nback_prepost$intensity) <- c(-.5,.5)
+contrasts(nback_prepost$intensity)
+contrasts(nback_prepost$load) <- c(-.5,.5)
+contrasts(nback_prepost$load)
+```
+
+```{r}
+lm_acc<-lmer(perf ~ time*intensity*load + (1 + time + intensity + load |sub), data=subset(nback_prepost,dvtype=="acc"))
+lm_acc2<-lmer(perf ~ time*intensity*load + (1 |sub), data=subset(nback_prepost,dvtype=="acc"))
+anova(lm_acc,lm_acc2)
+summary(lm_acc)
+```
+
+```{r}
+cat_plot(lm_acc, pred = time, modx = intensity, mod2 = load, geom="line")
+```
+
+
+## flanker
+```{r}
+flanker_prepost <- data %>%
+        filter(exclude=="include") %>%
+        select(sub,countergroup,pre_passive_inc_acc:percdiff_passive_con_RT) %>%
+        select(sub,countergroup,matches("pre|post")) %>%
+        gather(key=condition,value=perf,-sub,-countergroup)
+
+# now split condition column up to it's factors
+flanker_prepost<- mutate(flanker_prepost,dvtype=
+                                   ifelse(grepl("acc",condition),"acc","rt"))
+flanker_prepost<- mutate(flanker_prepost,time=
+                                   ifelse(grepl("pre",condition),"pre","post"))
+flanker_prepost<- mutate(flanker_prepost,intensity=
+                                   ifelse(grepl("passive",condition),"passive","active"))
+flanker_prepost<- mutate(flanker_prepost,load=
+                                   ifelse(grepl("inc",condition),"inc",
+                                          ifelse(grepl("con",condition),"con","neu")))
+
+write.csv(flanker_prepost,"acute_flanker-prepost_weng-etal-2015.csv",row.names=FALSE)
+       
+```
+
+
+
+```{r}
+flanker_percdiff <- data %>%
+        filter(exclude=="include") %>%
+        select(sub,countergroup,pre_passive_inc_acc:percdiff_passive_con_RT) %>%
+        select(sub,countergroup,matches("percdiff")) %>%
+        gather(key=condition,value=perf,-sub,-countergroup)
+
+# now split condition column up to it's factors
+flanker_percdiff<- mutate(flanker_percdiff,dvtype=
+                                   ifelse(grepl("acc",condition),"acc","rt"))
+flanker_percdiff<- mutate(flanker_percdiff,intensity=
+                                   ifelse(grepl("passive",condition),"passive","active"))
+flanker_percdiff<- mutate(flanker_percdiff,load=
+                                   ifelse(grepl("inc",condition),"inc",
+                                          ifelse(grepl("con",condition),"con","neu")))
+
+write.csv(flanker_percdiff,"acute_flanker-percdiff_weng-etal-2015.csv",row.names=FALSE)
+
+```
+
+
+### set factors
+```{r}
+flanker_prepost$time <- as.factor(flanker_prepost$time)
+flanker_prepost$time <- relevel(flanker_prepost$time,"pre")
+flanker_prepost$intensity <- as.factor(flanker_prepost$intensity)
+flanker_prepost$intensity <- relevel(flanker_prepost$intensity,"passive")
+flanker_prepost$load <- as.factor(flanker_prepost$load)
+
+flanker_percdiff$intensity <- as.factor(flanker_percdiff$intensity)
+flanker_percdiff$intensity <- relevel(flanker_percdiff$intensity,"passive")
+flanker_percdiff$load <- as.factor(flanker_percdiff$load)
+```
+
+
+
+### plot flanker
+```{r}
+ggplot(subset(flanker_prepost,dvtype=="acc"), aes(x=time,y=perf,group=sub)) + 
+  geom_line() + 
+  geom_point() +
+        facet_grid(~intensity*load) +
+        labs(title="Accuracy",y="Accuracy") + 
+        theme(strip.text = element_text(face="bold", size=15,lineheight=5.0), 
+        strip.background = element_rect(colour="black", size=1))
+```
+
+
+```{r}
+ggplot(subset(flanker_prepost,dvtype=="rt"), aes(x=time,y=perf,group=sub)) + 
+  geom_line() + 
+  geom_point() +
+        facet_grid(~intensity*load) +
+        labs(title="Reaction Time",y="RT") + 
+        theme(strip.text = element_text(face="bold", size=15,lineheight=5.0), 
+        strip.background = element_rect(colour="black", size=1))
+```
+
+
+
+```{r}
+ggplot(subset(flanker_percdiff,dvtype=="rt"), aes(x=intensity,y=perf,fill=load)) + 
+  scale_fill_manual(values=c("#E3871C", "#F5BD78","#CC9966")) +
+  geom_boxplot() + 
+  labs(title="Acute RT %change on flanker",y="%Diff",x="",fill="load") +
+  theme(title=element_text(size=16, face='bold'),
+        axis.text.x = element_text(size=16),
+        axis.text.y = element_text(size=15),
+        axis.title.y = element_text(size=16),
+        legend.text = element_text(size=15),
+        legend.title = element_text(size=15))
+
+ggplot(subset(flanker_percdiff,dvtype=="rt"), aes(x=intensity,y=perf)) + 
+  stat_summary(aes(y = perf), size=.5, fun.y = mean, geom="bar",size=1) + 
+  stat_summary(fun.data=mean_cl_normal, geom="errorbar", size=.5,width=.3) + 
+        facet_grid(~load) +
+        labs(title="Acute RT %change on flanker",y="%Diff",x="") +
+        theme(title=element_text(size=16, face='bold'),
+        axis.text.x = element_text(size=16),
+        axis.text.y = element_text(size=15),
+        axis.title.y = element_text(size=16),
+        legend.text = element_text(size=15),
+        legend.title = element_text(size=15))
+
+ggplot(subset(flanker_percdiff,dvtype=="rt"), aes(x=load,y=perf)) + 
+  stat_summary(aes(y = perf), size=.5, fun.y = mean, geom="bar",size=1) + 
+  stat_summary(fun.data=mean_cl_normal, geom="errorbar", size=.5,width=.3) + 
+        facet_grid(~intensity) +
+        labs(title="Acute RT %change on flanker",y="%Diff",x="") +
+        theme(title=element_text(size=16, face='bold'),
+        axis.text.x = element_text(size=16),
+        axis.text.y = element_text(size=15),
+        axis.title.y = element_text(size=16),
+        legend.text = element_text(size=15),
+        legend.title = element_text(size=15))
+```
+
+
+```{r}
+ggplot(subset(flanker_percdiff,dvtype=="acc"), aes(x=intensity,y=perf,fill=load)) + 
+  scale_fill_manual(values=c("#E3871C", "#F5BD78","#CC9966")) +
+  geom_boxplot() + 
+  labs(title="Acute ACC %change on flanker",y="%Diff",x="",fill="load") +
+  theme(title=element_text(size=16, face='bold'),
+        axis.text.x = element_text(size=16),
+        axis.text.y = element_text(size=15),
+        axis.title.y = element_text(size=16),
+        legend.text = element_text(size=15),
+        legend.title = element_text(size=15))
+
+ggplot(subset(flanker_percdiff,dvtype=="acc"), aes(x=intensity,y=perf)) + 
+  stat_summary(aes(y = perf), size=.5, fun.y = mean, geom="bar",size=1) + 
+  stat_summary(fun.data=mean_cl_normal, geom="errorbar", size=.5,width=.3) + 
+        facet_grid(~load) +
+        labs(title="Acute ACC %change on flanker",y="%Diff",x="") +
+        theme(title=element_text(size=16, face='bold'),
+        axis.text.x = element_text(size=16),
+        axis.text.y = element_text(size=15),
+        axis.title.y = element_text(size=16),
+        legend.text = element_text(size=15),
+        legend.title = element_text(size=15))
+
+ggplot(subset(flanker_percdiff,dvtype=="acc"), aes(x=load,y=perf)) + 
+  stat_summary(aes(y = perf), size=.5, fun.y = mean, geom="bar",size=1) + 
+  stat_summary(fun.data=mean_cl_normal, geom="errorbar", size=.5,width=.3) + 
+        facet_grid(~intensity) +
+        labs(title="Acute ACC %change on flanker",y="%Diff",x="") +
+        theme(title=element_text(size=16, face='bold'),
+        axis.text.x = element_text(size=16),
+        axis.text.y = element_text(size=15),
+        axis.title.y = element_text(size=16),
+        legend.text = element_text(size=15),
+        legend.title = element_text(size=15))
+```
+
+#### repeated measures anova with time as a factor
+```{r}
+aovACC<-aov_car(perf~time*intensity*load+Error(sub/time*intensity*load),subset(flanker_prepost,dvtype=="acc"))
+nice(aovACC)
+```
+
+
+#### repeated measures anova with percentdiff 
+
+**reaction time**
+```{r}
+aovRT<-aov_car(perf~intensity*load+Error(sub/intensity*load),subset(flanker_percdiff,dvtype=="rt"))
+nice(aovRT)
+aovRT_fitted<-lsmeans(aovRT,~load|intensity)
+aovRT_fitted
+pairs(aovRT_fitted)
+```
+
+
+**accuracy**
+```{r}
+aovACC<-aov_car(perf~intensity*load+Error(sub/intensity*load),subset(flanker_percdiff,dvtype=="acc"))
+nice(aovACC)
+aovACC_fitted<-lsmeans(aovACC,~load|intensity)
+aovACC_fitted
+pairs(aovACC_fitted)
+```
+
+
+**Accuracy with glm and covariates **
+
+Set to effect coding
+```{r}
+contrasts(flanker_prepost$time) <- c(-.5,.5)
+contrasts(flanker_prepost$time)
+contrasts(flanker_prepost$intensity) <- c(-.5,.5)
+contrasts(flanker_prepost$intensity)
+flanker_prepost$load <- relevel(flanker_prepost$load,"neu")
+# not sure if effect coding for 3-level variable is correct here
+c<-contr.treatment(3)
+my.coding<-matrix(rep(.25, 6), ncol=2)
+my.simple<-c-my.coding
+my.simple[my.simple==.75]<-.50
+contrasts(flanker_prepost$load)<-my.simple
+contrasts(flanker_prepost$load)
+```
+
+
+```{r}
+lm_acc<-lmer(perf ~ time*intensity*load + (1 + time + intensity + load |sub), data=subset(flanker_prepost,dvtype=="acc"))
+lm_acc2<-lmer(perf ~ time*intensity*load + (1 |sub), data=subset(flanker_prepost,dvtype=="acc"))
+anova(lm_acc,lm_acc2)
+summary(lm_acc)
+```
+
+```{r}
+cat_plot(lm_acc, pred = time, modx = intensity, mod2 = load, geom="line")
+```
+
+
+
+```{r}
+lm_rt<-lmer(perf ~ time*intensity*load + (1 + time + intensity + load |sub), data=subset(flanker_prepost,dvtype=="rt"))
+lm_rt2<-lmer(perf ~ time*intensity*load + (1 |sub), data=subset(flanker_prepost,dvtype=="rt"))
+anova(lm_rt,lm_rt2)
+summary(lm_rt)
+```
+
+
+```{r}
+cat_plot(lm_rt, pred = time, modx = intensity, mod2 = load, geom="line")
+```
