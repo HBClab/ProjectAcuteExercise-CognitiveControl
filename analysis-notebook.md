@@ -25,68 +25,586 @@ demographics in Table 1
 demogs <- data %>% 
         select(age,gender,edu,height,weight,bmi,Godin_score) 
 
-describe(demogs)
+library(pander)
 ```
 
-    ##             vars  n  mean    sd median trimmed   mad   min   max range
-    ## age            1 26 25.23  2.85  26.00   25.32  2.97 20.00 30.00 10.00
-    ## gender*        2 26  1.54  0.51   2.00    1.55  0.00  1.00  2.00  1.00
-    ## edu            3 26 17.77  2.74  17.75   17.73  1.85 13.00 23.00 10.00
-    ## height         4 26  1.74  0.08   1.75    1.74  0.08  1.55  1.88  0.33
-    ## weight         5 26 70.88 10.10  69.40   70.51 10.96 48.53 94.35 45.81
-    ## bmi            6 26 23.35  2.53  22.64   23.19  2.50 19.94 28.61  8.67
-    ## Godin_score    7 25 53.26 23.23  54.00   53.17 26.69 12.00 93.00 81.00
-    ##              skew kurtosis   se
-    ## age         -0.28    -1.27 0.56
-    ## gender*     -0.15    -2.05 0.10
-    ## edu          0.04    -0.93 0.54
-    ## height      -0.52    -0.57 0.02
-    ## weight       0.26    -0.17 1.98
-    ## bmi          0.65    -0.68 0.50
-    ## Godin_score  0.04    -1.22 4.65
+    ## Warning: package 'pander' was built under R version 3.3.2
 
 ``` r
-describeBy(demogs,group="gender")
+pander(describe(demogs))
 ```
 
-    ## 
-    ##  Descriptive statistics by group 
-    ## group: male
-    ##             vars  n  mean    sd median trimmed   mad   min   max range
-    ## age            1 12 25.83  2.59  26.00   25.90  2.97 21.00 30.00  9.00
-    ## gender*        2 12  1.00  0.00   1.00    1.00  0.00  1.00  1.00  0.00
-    ## edu            3 12 17.96  3.12  17.00   17.85  3.71 14.00 23.00  9.00
-    ## height         4 12  1.78  0.06   1.78    1.78  0.04  1.68  1.88  0.20
-    ## weight         5 12 74.49  7.48  74.03   74.23  7.94 62.32 89.36 27.03
-    ## bmi            6 12 23.57  2.46  22.51   23.41  0.99 20.59 28.25  7.66
-    ## Godin_score    7 11 54.95 26.57  49.00   55.50 33.36 12.00 93.00 81.00
-    ##              skew kurtosis   se
-    ## age         -0.35    -0.88 0.75
-    ## gender*       NaN      NaN 0.00
-    ## edu          0.25    -1.54 0.90
-    ## height       0.04    -0.73 0.02
-    ## weight       0.23    -0.90 2.16
-    ## bmi          0.72    -1.08 0.71
-    ## Godin_score -0.04    -1.61 8.01
-    ## -------------------------------------------------------- 
-    ## group: female
-    ##             vars  n  mean    sd median trimmed   mad   min   max range
-    ## age            1 14 24.71  3.05  24.00   24.83  4.45 20.00 28.00  8.00
-    ## gender*        2 14  2.00  0.00   2.00    2.00  0.00  2.00  2.00  0.00
-    ## edu            3 14 17.61  2.47  18.50   17.62  1.11 13.00 22.00  9.00
-    ## height         4 14  1.71  0.09   1.71    1.71  0.11  1.55  1.83  0.28
-    ## weight         5 14 67.78 11.24  64.86   67.17  6.72 48.53 94.35 45.81
-    ## bmi            6 14 23.16  2.66  23.15   22.97  2.28 19.94 28.61  8.67
-    ## Godin_score    7 14 51.93 21.20  54.50   51.42 20.02 19.00 91.00 72.00
-    ##              skew kurtosis   se
-    ## age         -0.11    -1.72 0.81
-    ## gender*       NaN      NaN 0.00
-    ## edu         -0.43    -0.71 0.66
-    ## height      -0.17    -1.40 0.02
-    ## weight       0.72     0.13 3.01
-    ## bmi          0.57    -0.75 0.71
-    ## Godin_score  0.07    -1.12 5.67
+<table>
+<caption>Table continues below</caption>
+<colgroup>
+<col width="23%" />
+<col width="9%" />
+<col width="6%" />
+<col width="10%" />
+<col width="12%" />
+<col width="11%" />
+<col width="12%" />
+<col width="12%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th align="center"> </th>
+<th align="center">vars</th>
+<th align="center">n</th>
+<th align="center">mean</th>
+<th align="center">sd</th>
+<th align="center">median</th>
+<th align="center">trimmed</th>
+<th align="center">mad</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="center"><strong>age</strong></td>
+<td align="center">1</td>
+<td align="center">26</td>
+<td align="center">25.23</td>
+<td align="center">2.847</td>
+<td align="center">26</td>
+<td align="center">25.32</td>
+<td align="center">2.965</td>
+</tr>
+<tr class="even">
+<td align="center"><strong>gender</strong>*</td>
+<td align="center">2</td>
+<td align="center">26</td>
+<td align="center">1.538</td>
+<td align="center">0.5084</td>
+<td align="center">2</td>
+<td align="center">1.545</td>
+<td align="center">0</td>
+</tr>
+<tr class="odd">
+<td align="center"><strong>edu</strong></td>
+<td align="center">3</td>
+<td align="center">26</td>
+<td align="center">17.77</td>
+<td align="center">2.736</td>
+<td align="center">17.75</td>
+<td align="center">17.73</td>
+<td align="center">1.853</td>
+</tr>
+<tr class="even">
+<td align="center"><strong>height</strong></td>
+<td align="center">4</td>
+<td align="center">26</td>
+<td align="center">1.74</td>
+<td align="center">0.08227</td>
+<td align="center">1.753</td>
+<td align="center">1.744</td>
+<td align="center">0.07532</td>
+</tr>
+<tr class="odd">
+<td align="center"><strong>weight</strong></td>
+<td align="center">5</td>
+<td align="center">26</td>
+<td align="center">70.88</td>
+<td align="center">10.1</td>
+<td align="center">69.4</td>
+<td align="center">70.51</td>
+<td align="center">10.96</td>
+</tr>
+<tr class="even">
+<td align="center"><strong>bmi</strong></td>
+<td align="center">6</td>
+<td align="center">26</td>
+<td align="center">23.35</td>
+<td align="center">2.528</td>
+<td align="center">22.64</td>
+<td align="center">23.19</td>
+<td align="center">2.501</td>
+</tr>
+<tr class="odd">
+<td align="center"><strong>Godin_score</strong></td>
+<td align="center">7</td>
+<td align="center">25</td>
+<td align="center">53.26</td>
+<td align="center">23.23</td>
+<td align="center">54</td>
+<td align="center">53.17</td>
+<td align="center">26.69</td>
+</tr>
+</tbody>
+</table>
 
+<table>
+<colgroup>
+<col width="24%" />
+<col width="10%" />
+<col width="10%" />
+<col width="12%" />
+<col width="13%" />
+<col width="14%" />
+<col width="14%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th align="center"> </th>
+<th align="center">min</th>
+<th align="center">max</th>
+<th align="center">range</th>
+<th align="center">skew</th>
+<th align="center">kurtosis</th>
+<th align="center">se</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="center"><strong>age</strong></td>
+<td align="center">20</td>
+<td align="center">30</td>
+<td align="center">10</td>
+<td align="center">-0.2844</td>
+<td align="center">-1.266</td>
+<td align="center">0.5583</td>
+</tr>
+<tr class="even">
+<td align="center"><strong>gender</strong>*</td>
+<td align="center">1</td>
+<td align="center">2</td>
+<td align="center">1</td>
+<td align="center">-0.1455</td>
+<td align="center">-2.053</td>
+<td align="center">0.0997</td>
+</tr>
+<tr class="odd">
+<td align="center"><strong>edu</strong></td>
+<td align="center">13</td>
+<td align="center">23</td>
+<td align="center">10</td>
+<td align="center">0.04106</td>
+<td align="center">-0.929</td>
+<td align="center">0.5365</td>
+</tr>
+<tr class="even">
+<td align="center"><strong>height</strong></td>
+<td align="center">1.549</td>
+<td align="center">1.88</td>
+<td align="center">0.3302</td>
+<td align="center">-0.5204</td>
+<td align="center">-0.5734</td>
+<td align="center">0.01613</td>
+</tr>
+<tr class="odd">
+<td align="center"><strong>weight</strong></td>
+<td align="center">48.53</td>
+<td align="center">94.35</td>
+<td align="center">45.81</td>
+<td align="center">0.2599</td>
+<td align="center">-0.1714</td>
+<td align="center">1.981</td>
+</tr>
+<tr class="even">
+<td align="center"><strong>bmi</strong></td>
+<td align="center">19.94</td>
+<td align="center">28.61</td>
+<td align="center">8.67</td>
+<td align="center">0.6501</td>
+<td align="center">-0.6785</td>
+<td align="center">0.4958</td>
+</tr>
+<tr class="odd">
+<td align="center"><strong>Godin_score</strong></td>
+<td align="center">12</td>
+<td align="center">93</td>
+<td align="center">81</td>
+<td align="center">0.04111</td>
+<td align="center">-1.218</td>
+<td align="center">4.647</td>
+</tr>
+</tbody>
+</table>
+
+``` r
+pander(describeBy(demogs,group="gender"))
+```
+
+    ## Warning in pander.default(describeBy(demogs, group = "gender")): No
+    ## pander.method for "psych", reverting to default.No pander.method for
+    ## "describeBy", reverting to default.
+
+-   **male**:
+
+    <table>
+    <caption>Table continues below</caption>
+    <colgroup>
+    <col width="23%" />
+    <col width="9%" />
+    <col width="6%" />
+    <col width="10%" />
+    <col width="12%" />
+    <col width="11%" />
+    <col width="12%" />
+    <col width="12%" />
+    </colgroup>
+    <thead>
+    <tr class="header">
+    <th align="center"> </th>
+    <th align="center">vars</th>
+    <th align="center">n</th>
+    <th align="center">mean</th>
+    <th align="center">sd</th>
+    <th align="center">median</th>
+    <th align="center">trimmed</th>
+    <th align="center">mad</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr class="odd">
+    <td align="center"><strong>age</strong></td>
+    <td align="center">1</td>
+    <td align="center">12</td>
+    <td align="center">25.83</td>
+    <td align="center">2.588</td>
+    <td align="center">26</td>
+    <td align="center">25.9</td>
+    <td align="center">2.965</td>
+    </tr>
+    <tr class="even">
+    <td align="center"><strong>gender</strong>*</td>
+    <td align="center">2</td>
+    <td align="center">12</td>
+    <td align="center">1</td>
+    <td align="center">0</td>
+    <td align="center">1</td>
+    <td align="center">1</td>
+    <td align="center">0</td>
+    </tr>
+    <tr class="odd">
+    <td align="center"><strong>edu</strong></td>
+    <td align="center">3</td>
+    <td align="center">12</td>
+    <td align="center">17.96</td>
+    <td align="center">3.122</td>
+    <td align="center">17</td>
+    <td align="center">17.85</td>
+    <td align="center">3.706</td>
+    </tr>
+    <tr class="even">
+    <td align="center"><strong>height</strong></td>
+    <td align="center">4</td>
+    <td align="center">12</td>
+    <td align="center">1.779</td>
+    <td align="center">0.05594</td>
+    <td align="center">1.778</td>
+    <td align="center">1.779</td>
+    <td align="center">0.03766</td>
+    </tr>
+    <tr class="odd">
+    <td align="center"><strong>weight</strong></td>
+    <td align="center">5</td>
+    <td align="center">12</td>
+    <td align="center">74.49</td>
+    <td align="center">7.48</td>
+    <td align="center">74.03</td>
+    <td align="center">74.23</td>
+    <td align="center">7.935</td>
+    </tr>
+    <tr class="even">
+    <td align="center"><strong>bmi</strong></td>
+    <td align="center">6</td>
+    <td align="center">12</td>
+    <td align="center">23.57</td>
+    <td align="center">2.465</td>
+    <td align="center">22.51</td>
+    <td align="center">23.41</td>
+    <td align="center">0.9867</td>
+    </tr>
+    <tr class="odd">
+    <td align="center"><strong>Godin_score</strong></td>
+    <td align="center">7</td>
+    <td align="center">11</td>
+    <td align="center">54.95</td>
+    <td align="center">26.57</td>
+    <td align="center">49</td>
+    <td align="center">55.5</td>
+    <td align="center">33.36</td>
+    </tr>
+    </tbody>
+    </table>
+
+    <table>
+    <colgroup>
+    <col width="23%" />
+    <col width="10%" />
+    <col width="10%" />
+    <col width="11%" />
+    <col width="14%" />
+    <col width="14%" />
+    <col width="14%" />
+    </colgroup>
+    <thead>
+    <tr class="header">
+    <th align="center"> </th>
+    <th align="center">min</th>
+    <th align="center">max</th>
+    <th align="center">range</th>
+    <th align="center">skew</th>
+    <th align="center">kurtosis</th>
+    <th align="center">se</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr class="odd">
+    <td align="center"><strong>age</strong></td>
+    <td align="center">21</td>
+    <td align="center">30</td>
+    <td align="center">9</td>
+    <td align="center">-0.3515</td>
+    <td align="center">-0.88</td>
+    <td align="center">0.747</td>
+    </tr>
+    <tr class="even">
+    <td align="center"><strong>gender</strong>*</td>
+    <td align="center">1</td>
+    <td align="center">1</td>
+    <td align="center">0</td>
+    <td align="center">NA</td>
+    <td align="center">NA</td>
+    <td align="center">0</td>
+    </tr>
+    <tr class="odd">
+    <td align="center"><strong>edu</strong></td>
+    <td align="center">14</td>
+    <td align="center">23</td>
+    <td align="center">9</td>
+    <td align="center">0.2479</td>
+    <td align="center">-1.536</td>
+    <td align="center">0.9013</td>
+    </tr>
+    <tr class="even">
+    <td align="center"><strong>height</strong></td>
+    <td align="center">1.676</td>
+    <td align="center">1.88</td>
+    <td align="center">0.2032</td>
+    <td align="center">0.04312</td>
+    <td align="center">-0.7343</td>
+    <td align="center">0.01615</td>
+    </tr>
+    <tr class="odd">
+    <td align="center"><strong>weight</strong></td>
+    <td align="center">62.32</td>
+    <td align="center">89.36</td>
+    <td align="center">27.03</td>
+    <td align="center">0.231</td>
+    <td align="center">-0.9043</td>
+    <td align="center">2.159</td>
+    </tr>
+    <tr class="even">
+    <td align="center"><strong>bmi</strong></td>
+    <td align="center">20.59</td>
+    <td align="center">28.25</td>
+    <td align="center">7.658</td>
+    <td align="center">0.7234</td>
+    <td align="center">-1.08</td>
+    <td align="center">0.7116</td>
+    </tr>
+    <tr class="odd">
+    <td align="center"><strong>Godin_score</strong></td>
+    <td align="center">12</td>
+    <td align="center">93</td>
+    <td align="center">81</td>
+    <td align="center">-0.04331</td>
+    <td align="center">-1.614</td>
+    <td align="center">8.01</td>
+    </tr>
+    </tbody>
+    </table>
+
+-   **female**:
+
+    <table>
+    <caption>Table continues below</caption>
+    <colgroup>
+    <col width="24%" />
+    <col width="9%" />
+    <col width="6%" />
+    <col width="10%" />
+    <col width="13%" />
+    <col width="12%" />
+    <col width="13%" />
+    <col width="9%" />
+    </colgroup>
+    <thead>
+    <tr class="header">
+    <th align="center"> </th>
+    <th align="center">vars</th>
+    <th align="center">n</th>
+    <th align="center">mean</th>
+    <th align="center">sd</th>
+    <th align="center">median</th>
+    <th align="center">trimmed</th>
+    <th align="center">mad</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr class="odd">
+    <td align="center"><strong>age</strong></td>
+    <td align="center">1</td>
+    <td align="center">14</td>
+    <td align="center">24.71</td>
+    <td align="center">3.049</td>
+    <td align="center">24</td>
+    <td align="center">24.83</td>
+    <td align="center">4.448</td>
+    </tr>
+    <tr class="even">
+    <td align="center"><strong>gender</strong>*</td>
+    <td align="center">2</td>
+    <td align="center">14</td>
+    <td align="center">2</td>
+    <td align="center">0</td>
+    <td align="center">2</td>
+    <td align="center">2</td>
+    <td align="center">0</td>
+    </tr>
+    <tr class="odd">
+    <td align="center"><strong>edu</strong></td>
+    <td align="center">3</td>
+    <td align="center">14</td>
+    <td align="center">17.61</td>
+    <td align="center">2.467</td>
+    <td align="center">18.5</td>
+    <td align="center">17.62</td>
+    <td align="center">1.112</td>
+    </tr>
+    <tr class="even">
+    <td align="center"><strong>height</strong></td>
+    <td align="center">4</td>
+    <td align="center">14</td>
+    <td align="center">1.708</td>
+    <td align="center">0.08866</td>
+    <td align="center">1.715</td>
+    <td align="center">1.711</td>
+    <td align="center">0.113</td>
+    </tr>
+    <tr class="odd">
+    <td align="center"><strong>weight</strong></td>
+    <td align="center">5</td>
+    <td align="center">14</td>
+    <td align="center">67.78</td>
+    <td align="center">11.24</td>
+    <td align="center">64.86</td>
+    <td align="center">67.17</td>
+    <td align="center">6.725</td>
+    </tr>
+    <tr class="even">
+    <td align="center"><strong>bmi</strong></td>
+    <td align="center">6</td>
+    <td align="center">14</td>
+    <td align="center">23.16</td>
+    <td align="center">2.657</td>
+    <td align="center">23.15</td>
+    <td align="center">22.97</td>
+    <td align="center">2.285</td>
+    </tr>
+    <tr class="odd">
+    <td align="center"><strong>Godin_score</strong></td>
+    <td align="center">7</td>
+    <td align="center">14</td>
+    <td align="center">51.93</td>
+    <td align="center">21.2</td>
+    <td align="center">54.5</td>
+    <td align="center">51.42</td>
+    <td align="center">20.02</td>
+    </tr>
+    </tbody>
+    </table>
+
+    <table>
+    <colgroup>
+    <col width="25%" />
+    <col width="11%" />
+    <col width="11%" />
+    <col width="12%" />
+    <col width="13%" />
+    <col width="15%" />
+    <col width="11%" />
+    </colgroup>
+    <thead>
+    <tr class="header">
+    <th align="center"> </th>
+    <th align="center">min</th>
+    <th align="center">max</th>
+    <th align="center">range</th>
+    <th align="center">skew</th>
+    <th align="center">kurtosis</th>
+    <th align="center">se</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr class="odd">
+    <td align="center"><strong>age</strong></td>
+    <td align="center">20</td>
+    <td align="center">28</td>
+    <td align="center">8</td>
+    <td align="center">-0.1111</td>
+    <td align="center">-1.72</td>
+    <td align="center">0.8149</td>
+    </tr>
+    <tr class="even">
+    <td align="center"><strong>gender</strong>*</td>
+    <td align="center">2</td>
+    <td align="center">2</td>
+    <td align="center">0</td>
+    <td align="center">NA</td>
+    <td align="center">NA</td>
+    <td align="center">0</td>
+    </tr>
+    <tr class="odd">
+    <td align="center"><strong>edu</strong></td>
+    <td align="center">13</td>
+    <td align="center">22</td>
+    <td align="center">9</td>
+    <td align="center">-0.4335</td>
+    <td align="center">-0.7143</td>
+    <td align="center">0.6592</td>
+    </tr>
+    <tr class="even">
+    <td align="center"><strong>height</strong></td>
+    <td align="center">1.549</td>
+    <td align="center">1.829</td>
+    <td align="center">0.2794</td>
+    <td align="center">-0.1746</td>
+    <td align="center">-1.4</td>
+    <td align="center">0.0237</td>
+    </tr>
+    <tr class="odd">
+    <td align="center"><strong>weight</strong></td>
+    <td align="center">48.53</td>
+    <td align="center">94.35</td>
+    <td align="center">45.81</td>
+    <td align="center">0.7164</td>
+    <td align="center">0.1294</td>
+    <td align="center">3.005</td>
+    </tr>
+    <tr class="even">
+    <td align="center"><strong>bmi</strong></td>
+    <td align="center">19.94</td>
+    <td align="center">28.61</td>
+    <td align="center">8.67</td>
+    <td align="center">0.5747</td>
+    <td align="center">-0.7468</td>
+    <td align="center">0.7102</td>
+    </tr>
+    <tr class="odd">
+    <td align="center"><strong>Godin_score</strong></td>
+    <td align="center">19</td>
+    <td align="center">91</td>
+    <td align="center">72</td>
+    <td align="center">0.06941</td>
+    <td align="center">-1.121</td>
+    <td align="center">5.665</td>
+    </tr>
+    </tbody>
+    </table>
+
+<!-- end of list -->
 paired t-tests for exercise conditions
 ======================================
 

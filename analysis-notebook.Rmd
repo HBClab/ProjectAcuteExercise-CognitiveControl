@@ -47,8 +47,9 @@ write.csv(data,"acute_beh_data_weng-etal-2015.csv",row.names=FALSE)
 demogs <- data %>% 
         select(age,gender,edu,height,weight,bmi,Godin_score) 
 
-describe(demogs)
-describeBy(demogs,group="gender")
+library(pander)
+pander(describe(demogs))
+pander(describeBy(demogs,group="gender"))
 ```
 
 
