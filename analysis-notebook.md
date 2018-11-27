@@ -25,12 +25,6 @@ demographics in Table 1
 demogs <- data %>% 
         select(age,gender,edu,height,weight,bmi,Godin_score) 
 
-library(pander)
-```
-
-    ## Warning: package 'pander' was built under R version 3.3.2
-
-``` r
 pander(describe(demogs))
 ```
 
@@ -616,15 +610,99 @@ Exercise HR
 -----------
 
 ``` r
-describe(exercise_data[,10:11])
+pander(describe(exercise_data[,10:11]))
 ```
 
-    ##               vars  n   mean    sd median trimmed   mad   min   max range
-    ## avgHR_passive    1 26  75.51 11.88   76.3   75.28 14.09  55.0 104.9  49.9
-    ## avgHR_active     2 26 124.63  3.37  124.5  124.63  3.48 118.3 130.8  12.5
-    ##               skew kurtosis   se
-    ## avgHR_passive 0.16    -0.40 2.33
-    ## avgHR_active  0.08    -0.86 0.66
+<table>
+<caption>Table continues below</caption>
+<colgroup>
+<col width="27%" />
+<col width="9%" />
+<col width="6%" />
+<col width="10%" />
+<col width="10%" />
+<col width="12%" />
+<col width="13%" />
+<col width="9%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th align="center"> </th>
+<th align="center">vars</th>
+<th align="center">n</th>
+<th align="center">mean</th>
+<th align="center">sd</th>
+<th align="center">median</th>
+<th align="center">trimmed</th>
+<th align="center">mad</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="center"><strong>avgHR_passive</strong></td>
+<td align="center">1</td>
+<td align="center">26</td>
+<td align="center">75.51</td>
+<td align="center">11.88</td>
+<td align="center">76.3</td>
+<td align="center">75.28</td>
+<td align="center">14.09</td>
+</tr>
+<tr class="even">
+<td align="center"><strong>avgHR_active</strong></td>
+<td align="center">2</td>
+<td align="center">26</td>
+<td align="center">124.6</td>
+<td align="center">3.37</td>
+<td align="center">124.5</td>
+<td align="center">124.6</td>
+<td align="center">3.484</td>
+</tr>
+</tbody>
+</table>
+
+<table>
+<colgroup>
+<col width="27%" />
+<col width="10%" />
+<col width="10%" />
+<col width="10%" />
+<col width="13%" />
+<col width="15%" />
+<col width="10%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th align="center"> </th>
+<th align="center">min</th>
+<th align="center">max</th>
+<th align="center">range</th>
+<th align="center">skew</th>
+<th align="center">kurtosis</th>
+<th align="center">se</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="center"><strong>avgHR_passive</strong></td>
+<td align="center">55</td>
+<td align="center">104.9</td>
+<td align="center">49.9</td>
+<td align="center">0.1612</td>
+<td align="center">-0.4022</td>
+<td align="center">2.33</td>
+</tr>
+<tr class="even">
+<td align="center"><strong>avgHR_active</strong></td>
+<td align="center">118.3</td>
+<td align="center">130.8</td>
+<td align="center">12.5</td>
+<td align="center">0.07767</td>
+<td align="center">-0.8626</td>
+<td align="center">0.6609</td>
+</tr>
+</tbody>
+</table>
 
 ``` r
 t.test(exercise_data$avgHR_passive, 
@@ -649,15 +727,99 @@ Exercise %HRmax
 ---------------
 
 ``` r
-describe(exercise_data[,12:13])
+pander(describe(exercise_data[,12:13]))
 ```
 
-    ##            vars  n mean   sd median trimmed  mad  min  max range  skew
-    ## hrmax_act     1 26 0.64 0.01   0.64    0.64 0.01 0.60 0.67  0.07 -0.08
-    ## hrmax_pass    2 26 0.39 0.06   0.39    0.39 0.07 0.29 0.54  0.25  0.28
-    ##            kurtosis   se
-    ## hrmax_act      0.26 0.00
-    ## hrmax_pass    -0.25 0.01
+<table>
+<caption>Table continues below</caption>
+<colgroup>
+<col width="22%" />
+<col width="9%" />
+<col width="6%" />
+<col width="11%" />
+<col width="12%" />
+<col width="11%" />
+<col width="12%" />
+<col width="12%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th align="center"> </th>
+<th align="center">vars</th>
+<th align="center">n</th>
+<th align="center">mean</th>
+<th align="center">sd</th>
+<th align="center">median</th>
+<th align="center">trimmed</th>
+<th align="center">mad</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="center"><strong>hrmax_act</strong></td>
+<td align="center">1</td>
+<td align="center">26</td>
+<td align="center">0.6399</td>
+<td align="center">0.01455</td>
+<td align="center">0.6405</td>
+<td align="center">0.6401</td>
+<td align="center">0.01219</td>
+</tr>
+<tr class="even">
+<td align="center"><strong>hrmax_pass</strong></td>
+<td align="center">2</td>
+<td align="center">26</td>
+<td align="center">0.3875</td>
+<td align="center">0.05974</td>
+<td align="center">0.3873</td>
+<td align="center">0.3855</td>
+<td align="center">0.06839</td>
+</tr>
+</tbody>
+</table>
+
+<table style="width:100%;">
+<colgroup>
+<col width="22%" />
+<col width="11%" />
+<col width="11%" />
+<col width="12%" />
+<col width="12%" />
+<col width="14%" />
+<col width="14%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th align="center"> </th>
+<th align="center">min</th>
+<th align="center">max</th>
+<th align="center">range</th>
+<th align="center">skew</th>
+<th align="center">kurtosis</th>
+<th align="center">se</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="center"><strong>hrmax_act</strong></td>
+<td align="center">0.6046</td>
+<td align="center">0.6742</td>
+<td align="center">0.06966</td>
+<td align="center">-0.0827</td>
+<td align="center">0.2578</td>
+<td align="center">0.002853</td>
+</tr>
+<tr class="even">
+<td align="center"><strong>hrmax_pass</strong></td>
+<td align="center">0.2865</td>
+<td align="center">0.5407</td>
+<td align="center">0.2543</td>
+<td align="center">0.281</td>
+<td align="center">-0.2493</td>
+<td align="center">0.01172</td>
+</tr>
+</tbody>
+</table>
 
 ``` r
 t.test(exercise_data$hrmax_pass, 
@@ -682,15 +844,99 @@ RPE
 ---
 
 ``` r
-describe(exercise_data[,4:5])
+pander(describe(exercise_data[,4:5]))
 ```
 
-    ##                vars  n  mean   sd median trimmed  mad min  max range skew
-    ## avgRPE_passive    1 26  7.56 1.59   7.00    7.36 1.26 6.0 11.4   5.4 1.12
-    ## avgRPE_active     2 26 12.54 1.58  12.65   12.52 0.96 8.9 16.0   7.1 0.25
-    ##                kurtosis   se
-    ## avgRPE_passive     0.29 0.31
-    ## avgRPE_active      0.34 0.31
+<table>
+<caption>Table continues below</caption>
+<colgroup>
+<col width="26%" />
+<col width="8%" />
+<col width="6%" />
+<col width="10%" />
+<col width="10%" />
+<col width="11%" />
+<col width="12%" />
+<col width="12%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th align="center"> </th>
+<th align="center">vars</th>
+<th align="center">n</th>
+<th align="center">mean</th>
+<th align="center">sd</th>
+<th align="center">median</th>
+<th align="center">trimmed</th>
+<th align="center">mad</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="center"><strong>avgRPE_passive</strong></td>
+<td align="center">1</td>
+<td align="center">26</td>
+<td align="center">7.558</td>
+<td align="center">1.587</td>
+<td align="center">7</td>
+<td align="center">7.361</td>
+<td align="center">1.26</td>
+</tr>
+<tr class="even">
+<td align="center"><strong>avgRPE_active</strong></td>
+<td align="center">2</td>
+<td align="center">26</td>
+<td align="center">12.54</td>
+<td align="center">1.582</td>
+<td align="center">12.65</td>
+<td align="center">12.52</td>
+<td align="center">0.9637</td>
+</tr>
+</tbody>
+</table>
+
+<table style="width:97%;">
+<colgroup>
+<col width="29%" />
+<col width="8%" />
+<col width="9%" />
+<col width="11%" />
+<col width="12%" />
+<col width="15%" />
+<col width="11%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th align="center"> </th>
+<th align="center">min</th>
+<th align="center">max</th>
+<th align="center">range</th>
+<th align="center">skew</th>
+<th align="center">kurtosis</th>
+<th align="center">se</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="center"><strong>avgRPE_passive</strong></td>
+<td align="center">6</td>
+<td align="center">11.4</td>
+<td align="center">5.4</td>
+<td align="center">1.119</td>
+<td align="center">0.2896</td>
+<td align="center">0.3112</td>
+</tr>
+<tr class="even">
+<td align="center"><strong>avgRPE_active</strong></td>
+<td align="center">8.9</td>
+<td align="center">16</td>
+<td align="center">7.1</td>
+<td align="center">0.2536</td>
+<td align="center">0.3361</td>
+<td align="center">0.3102</td>
+</tr>
+</tbody>
+</table>
 
 ``` r
 t.test(exercise_data$avgRPE_passive, 
@@ -715,15 +961,99 @@ FAS
 ---
 
 ``` r
-describe(exercise_data[,8:9])
+pander(describe(exercise_data[,8:9]))
 ```
 
-    ##                vars  n mean   sd median trimmed  mad min max range skew
-    ## avgFAS_passive    1 26 1.86 0.89   1.70    1.74 0.96   1 4.2   3.2 1.06
-    ## avgFAS_active     2 26 3.07 1.08   3.12    3.04 1.19   1 5.7   4.7 0.27
-    ##                kurtosis   se
-    ## avgFAS_passive     0.35 0.18
-    ## avgFAS_active     -0.14 0.21
+<table>
+<caption>Table continues below</caption>
+<colgroup>
+<col width="26%" />
+<col width="8%" />
+<col width="6%" />
+<col width="10%" />
+<col width="11%" />
+<col width="11%" />
+<col width="12%" />
+<col width="12%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th align="center"> </th>
+<th align="center">vars</th>
+<th align="center">n</th>
+<th align="center">mean</th>
+<th align="center">sd</th>
+<th align="center">median</th>
+<th align="center">trimmed</th>
+<th align="center">mad</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="center"><strong>avgFAS_passive</strong></td>
+<td align="center">1</td>
+<td align="center">26</td>
+<td align="center">1.86</td>
+<td align="center">0.8938</td>
+<td align="center">1.7</td>
+<td align="center">1.739</td>
+<td align="center">0.9637</td>
+</tr>
+<tr class="even">
+<td align="center"><strong>avgFAS_active</strong></td>
+<td align="center">2</td>
+<td align="center">26</td>
+<td align="center">3.065</td>
+<td align="center">1.083</td>
+<td align="center">3.125</td>
+<td align="center">3.036</td>
+<td align="center">1.186</td>
+</tr>
+</tbody>
+</table>
+
+<table style="width:96%;">
+<colgroup>
+<col width="29%" />
+<col width="8%" />
+<col width="8%" />
+<col width="11%" />
+<col width="12%" />
+<col width="15%" />
+<col width="11%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th align="center"> </th>
+<th align="center">min</th>
+<th align="center">max</th>
+<th align="center">range</th>
+<th align="center">skew</th>
+<th align="center">kurtosis</th>
+<th align="center">se</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="center"><strong>avgFAS_passive</strong></td>
+<td align="center">1</td>
+<td align="center">4.2</td>
+<td align="center">3.2</td>
+<td align="center">1.06</td>
+<td align="center">0.3459</td>
+<td align="center">0.1753</td>
+</tr>
+<tr class="even">
+<td align="center"><strong>avgFAS_active</strong></td>
+<td align="center">1</td>
+<td align="center">5.7</td>
+<td align="center">4.7</td>
+<td align="center">0.2725</td>
+<td align="center">-0.1382</td>
+<td align="center">0.2124</td>
+</tr>
+</tbody>
+</table>
 
 ``` r
 t.test(exercise_data$avgFAS_passive, 
@@ -748,15 +1078,99 @@ FS
 --
 
 ``` r
-describe(exercise_data[,6:7])
+pander(describe(exercise_data[,6:7]))
 ```
 
-    ##               vars  n mean   sd median trimmed  mad  min max range  skew
-    ## avgFS_passive    1 26 3.49 1.05    3.5    3.59 0.74  0.6   5   4.4 -0.86
-    ## avgFS_active     2 26 2.82 1.25    3.0    2.95 0.74 -0.9   5   5.9 -1.10
-    ##               kurtosis   se
-    ## avgFS_passive     1.05 0.21
-    ## avgFS_active      1.29 0.25
+<table style="width:100%;">
+<caption>Table continues below</caption>
+<colgroup>
+<col width="25%" />
+<col width="9%" />
+<col width="6%" />
+<col width="10%" />
+<col width="10%" />
+<col width="11%" />
+<col width="12%" />
+<col width="12%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th align="center"> </th>
+<th align="center">vars</th>
+<th align="center">n</th>
+<th align="center">mean</th>
+<th align="center">sd</th>
+<th align="center">median</th>
+<th align="center">trimmed</th>
+<th align="center">mad</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="center"><strong>avgFS_passive</strong></td>
+<td align="center">1</td>
+<td align="center">26</td>
+<td align="center">3.487</td>
+<td align="center">1.054</td>
+<td align="center">3.5</td>
+<td align="center">3.593</td>
+<td align="center">0.7413</td>
+</tr>
+<tr class="even">
+<td align="center"><strong>avgFS_active</strong></td>
+<td align="center">2</td>
+<td align="center">26</td>
+<td align="center">2.821</td>
+<td align="center">1.254</td>
+<td align="center">3</td>
+<td align="center">2.952</td>
+<td align="center">0.7413</td>
+</tr>
+</tbody>
+</table>
+
+<table style="width:97%;">
+<colgroup>
+<col width="27%" />
+<col width="9%" />
+<col width="8%" />
+<col width="11%" />
+<col width="13%" />
+<col width="15%" />
+<col width="11%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th align="center"> </th>
+<th align="center">min</th>
+<th align="center">max</th>
+<th align="center">range</th>
+<th align="center">skew</th>
+<th align="center">kurtosis</th>
+<th align="center">se</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="center"><strong>avgFS_passive</strong></td>
+<td align="center">0.6</td>
+<td align="center">5</td>
+<td align="center">4.4</td>
+<td align="center">-0.8624</td>
+<td align="center">1.047</td>
+<td align="center">0.2068</td>
+</tr>
+<tr class="even">
+<td align="center"><strong>avgFS_active</strong></td>
+<td align="center">-0.9</td>
+<td align="center">5</td>
+<td align="center">5.9</td>
+<td align="center">-1.096</td>
+<td align="center">1.289</td>
+<td align="center">0.2459</td>
+</tr>
+</tbody>
+</table>
 
 ``` r
 t.test(exercise_data$avgFS_passive, 
