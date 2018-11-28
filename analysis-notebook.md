@@ -25,7 +25,7 @@ demographics in Table 1
 
 ``` r
 demogs <- data %>% 
-        select(age,gender,edu,height,weight,bmi,Godin_score) 
+        select(age,gender,edu,height,weight,bmi,godin_score) 
 
 pander(describe(demogs))
 ```
@@ -116,7 +116,7 @@ pander(describe(demogs))
 <td align="center">2.501</td>
 </tr>
 <tr class="odd">
-<td align="center"><strong>Godin_score</strong></td>
+<td align="center"><strong>godin_score</strong></td>
 <td align="center">7</td>
 <td align="center">25</td>
 <td align="center">53.26</td>
@@ -205,7 +205,7 @@ pander(describe(demogs))
 <td align="center">0.4958</td>
 </tr>
 <tr class="odd">
-<td align="center"><strong>Godin_score</strong></td>
+<td align="center"><strong>godin_score</strong></td>
 <td align="center">12</td>
 <td align="center">93</td>
 <td align="center">81</td>
@@ -312,7 +312,7 @@ pander(describeBy(demogs,group="gender"))
     <td align="center">0.9867</td>
     </tr>
     <tr class="odd">
-    <td align="center"><strong>Godin_score</strong></td>
+    <td align="center"><strong>godin_score</strong></td>
     <td align="center">7</td>
     <td align="center">11</td>
     <td align="center">54.95</td>
@@ -401,7 +401,7 @@ pander(describeBy(demogs,group="gender"))
     <td align="center">0.7116</td>
     </tr>
     <tr class="odd">
-    <td align="center"><strong>Godin_score</strong></td>
+    <td align="center"><strong>godin_score</strong></td>
     <td align="center">12</td>
     <td align="center">93</td>
     <td align="center">81</td>
@@ -500,7 +500,7 @@ pander(describeBy(demogs,group="gender"))
     <td align="center">2.285</td>
     </tr>
     <tr class="odd">
-    <td align="center"><strong>Godin_score</strong></td>
+    <td align="center"><strong>godin_score</strong></td>
     <td align="center">7</td>
     <td align="center">14</td>
     <td align="center">51.93</td>
@@ -589,7 +589,7 @@ pander(describeBy(demogs,group="gender"))
     <td align="center">0.7102</td>
     </tr>
     <tr class="odd">
-    <td align="center"><strong>Godin_score</strong></td>
+    <td align="center"><strong>godin_score</strong></td>
     <td align="center">19</td>
     <td align="center">91</td>
     <td align="center">72</td>
@@ -605,118 +605,34 @@ paired t-tests for exercise conditions
 ======================================
 
 ``` r
-exercise_data <- data[,c(1:3,18:27)]
+# get columns that match this pattern (| means "or")
+exercise_vars <- grep(names(data), pattern = "^sub$|^exclude$|^countergroup$|active$|passive$|act$|pass$")
+exercise_data <- select(data, exercise_vars)
+
+# function for doing the ttest
+desttest <- function(cols, data) {
+    data[, cols] %>%
+    describe() %>%
+    pander()
+  
+  t.test(data[, cols[1]], 
+         data[, cols[2]], 
+         paired=TRUE, 
+         conf.level=0.95)
+}
 ```
 
 Exercise HR
 -----------
 
 ``` r
-pander(describe(exercise_data[,10:11]))
-```
-
-<table>
-<caption>Table continues below</caption>
-<colgroup>
-<col width="27%" />
-<col width="9%" />
-<col width="6%" />
-<col width="10%" />
-<col width="10%" />
-<col width="12%" />
-<col width="13%" />
-<col width="9%" />
-</colgroup>
-<thead>
-<tr class="header">
-<th align="center"> </th>
-<th align="center">vars</th>
-<th align="center">n</th>
-<th align="center">mean</th>
-<th align="center">sd</th>
-<th align="center">median</th>
-<th align="center">trimmed</th>
-<th align="center">mad</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td align="center"><strong>avgHR_passive</strong></td>
-<td align="center">1</td>
-<td align="center">26</td>
-<td align="center">75.51</td>
-<td align="center">11.88</td>
-<td align="center">76.3</td>
-<td align="center">75.28</td>
-<td align="center">14.09</td>
-</tr>
-<tr class="even">
-<td align="center"><strong>avgHR_active</strong></td>
-<td align="center">2</td>
-<td align="center">26</td>
-<td align="center">124.6</td>
-<td align="center">3.37</td>
-<td align="center">124.5</td>
-<td align="center">124.6</td>
-<td align="center">3.484</td>
-</tr>
-</tbody>
-</table>
-
-<table>
-<colgroup>
-<col width="27%" />
-<col width="10%" />
-<col width="10%" />
-<col width="10%" />
-<col width="13%" />
-<col width="15%" />
-<col width="10%" />
-</colgroup>
-<thead>
-<tr class="header">
-<th align="center"> </th>
-<th align="center">min</th>
-<th align="center">max</th>
-<th align="center">range</th>
-<th align="center">skew</th>
-<th align="center">kurtosis</th>
-<th align="center">se</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td align="center"><strong>avgHR_passive</strong></td>
-<td align="center">55</td>
-<td align="center">104.9</td>
-<td align="center">49.9</td>
-<td align="center">0.1612</td>
-<td align="center">-0.4022</td>
-<td align="center">2.33</td>
-</tr>
-<tr class="even">
-<td align="center"><strong>avgHR_active</strong></td>
-<td align="center">118.3</td>
-<td align="center">130.8</td>
-<td align="center">12.5</td>
-<td align="center">0.07767</td>
-<td align="center">-0.8626</td>
-<td align="center">0.6609</td>
-</tr>
-</tbody>
-</table>
-
-``` r
-t.test(exercise_data$avgHR_passive, 
-       exercise_data$avgHR_active, 
-       paired=TRUE, 
-       conf.level=0.95)
+desttest(c("avghr_passive", "avghr_active"), exercise_data)
 ```
 
     ## 
     ##  Paired t-test
     ## 
-    ## data:  exercise_data$avgHR_passive and exercise_data$avgHR_active
+    ## data:  data[, cols[1]] and data[, cols[2]]
     ## t = -22.102, df = 25, p-value < 2.2e-16
     ## alternative hypothesis: true difference in means is not equal to 0
     ## 95 percent confidence interval:
@@ -729,111 +645,13 @@ Exercise %HRmax
 ---------------
 
 ``` r
-pander(describe(exercise_data[,12:13]))
-```
-
-<table>
-<caption>Table continues below</caption>
-<colgroup>
-<col width="22%" />
-<col width="9%" />
-<col width="6%" />
-<col width="11%" />
-<col width="12%" />
-<col width="11%" />
-<col width="12%" />
-<col width="12%" />
-</colgroup>
-<thead>
-<tr class="header">
-<th align="center"> </th>
-<th align="center">vars</th>
-<th align="center">n</th>
-<th align="center">mean</th>
-<th align="center">sd</th>
-<th align="center">median</th>
-<th align="center">trimmed</th>
-<th align="center">mad</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td align="center"><strong>hrmax_act</strong></td>
-<td align="center">1</td>
-<td align="center">26</td>
-<td align="center">0.6399</td>
-<td align="center">0.01455</td>
-<td align="center">0.6405</td>
-<td align="center">0.6401</td>
-<td align="center">0.01219</td>
-</tr>
-<tr class="even">
-<td align="center"><strong>hrmax_pass</strong></td>
-<td align="center">2</td>
-<td align="center">26</td>
-<td align="center">0.3875</td>
-<td align="center">0.05974</td>
-<td align="center">0.3873</td>
-<td align="center">0.3855</td>
-<td align="center">0.06839</td>
-</tr>
-</tbody>
-</table>
-
-<table style="width:100%;">
-<colgroup>
-<col width="22%" />
-<col width="11%" />
-<col width="11%" />
-<col width="12%" />
-<col width="12%" />
-<col width="14%" />
-<col width="14%" />
-</colgroup>
-<thead>
-<tr class="header">
-<th align="center"> </th>
-<th align="center">min</th>
-<th align="center">max</th>
-<th align="center">range</th>
-<th align="center">skew</th>
-<th align="center">kurtosis</th>
-<th align="center">se</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td align="center"><strong>hrmax_act</strong></td>
-<td align="center">0.6046</td>
-<td align="center">0.6742</td>
-<td align="center">0.06966</td>
-<td align="center">-0.0827</td>
-<td align="center">0.2578</td>
-<td align="center">0.002853</td>
-</tr>
-<tr class="even">
-<td align="center"><strong>hrmax_pass</strong></td>
-<td align="center">0.2865</td>
-<td align="center">0.5407</td>
-<td align="center">0.2543</td>
-<td align="center">0.281</td>
-<td align="center">-0.2493</td>
-<td align="center">0.01172</td>
-</tr>
-</tbody>
-</table>
-
-``` r
-t.test(exercise_data$hrmax_pass, 
-       exercise_data$hrmax_act, 
-       paired=TRUE, 
-       conf.level=0.95)
+desttest(c("hrmax_pass", "hrmax_act"), exercise_data)
 ```
 
     ## 
     ##  Paired t-test
     ## 
-    ## data:  exercise_data$hrmax_pass and exercise_data$hrmax_act
+    ## data:  data[, cols[1]] and data[, cols[2]]
     ## t = -21.709, df = 25, p-value < 2.2e-16
     ## alternative hypothesis: true difference in means is not equal to 0
     ## 95 percent confidence interval:
@@ -846,111 +664,13 @@ RPE
 ---
 
 ``` r
-pander(describe(exercise_data[,4:5]))
-```
-
-<table>
-<caption>Table continues below</caption>
-<colgroup>
-<col width="26%" />
-<col width="8%" />
-<col width="6%" />
-<col width="10%" />
-<col width="10%" />
-<col width="11%" />
-<col width="12%" />
-<col width="12%" />
-</colgroup>
-<thead>
-<tr class="header">
-<th align="center"> </th>
-<th align="center">vars</th>
-<th align="center">n</th>
-<th align="center">mean</th>
-<th align="center">sd</th>
-<th align="center">median</th>
-<th align="center">trimmed</th>
-<th align="center">mad</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td align="center"><strong>avgRPE_passive</strong></td>
-<td align="center">1</td>
-<td align="center">26</td>
-<td align="center">7.558</td>
-<td align="center">1.587</td>
-<td align="center">7</td>
-<td align="center">7.361</td>
-<td align="center">1.26</td>
-</tr>
-<tr class="even">
-<td align="center"><strong>avgRPE_active</strong></td>
-<td align="center">2</td>
-<td align="center">26</td>
-<td align="center">12.54</td>
-<td align="center">1.582</td>
-<td align="center">12.65</td>
-<td align="center">12.52</td>
-<td align="center">0.9637</td>
-</tr>
-</tbody>
-</table>
-
-<table style="width:97%;">
-<colgroup>
-<col width="29%" />
-<col width="8%" />
-<col width="9%" />
-<col width="11%" />
-<col width="12%" />
-<col width="15%" />
-<col width="11%" />
-</colgroup>
-<thead>
-<tr class="header">
-<th align="center"> </th>
-<th align="center">min</th>
-<th align="center">max</th>
-<th align="center">range</th>
-<th align="center">skew</th>
-<th align="center">kurtosis</th>
-<th align="center">se</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td align="center"><strong>avgRPE_passive</strong></td>
-<td align="center">6</td>
-<td align="center">11.4</td>
-<td align="center">5.4</td>
-<td align="center">1.119</td>
-<td align="center">0.2896</td>
-<td align="center">0.3112</td>
-</tr>
-<tr class="even">
-<td align="center"><strong>avgRPE_active</strong></td>
-<td align="center">8.9</td>
-<td align="center">16</td>
-<td align="center">7.1</td>
-<td align="center">0.2536</td>
-<td align="center">0.3361</td>
-<td align="center">0.3102</td>
-</tr>
-</tbody>
-</table>
-
-``` r
-t.test(exercise_data$avgRPE_passive, 
-       exercise_data$avgRPE_active, 
-       paired=TRUE, 
-       conf.level=0.95)
+desttest(c("avgrpe_passive", "avgrpe_active"), exercise_data)
 ```
 
     ## 
     ##  Paired t-test
     ## 
-    ## data:  exercise_data$avgRPE_passive and exercise_data$avgRPE_active
+    ## data:  data[, cols[1]] and data[, cols[2]]
     ## t = -14.652, df = 25, p-value = 8.898e-14
     ## alternative hypothesis: true difference in means is not equal to 0
     ## 95 percent confidence interval:
@@ -963,111 +683,13 @@ FAS
 ---
 
 ``` r
-pander(describe(exercise_data[,8:9]))
-```
-
-<table>
-<caption>Table continues below</caption>
-<colgroup>
-<col width="26%" />
-<col width="8%" />
-<col width="6%" />
-<col width="10%" />
-<col width="11%" />
-<col width="11%" />
-<col width="12%" />
-<col width="12%" />
-</colgroup>
-<thead>
-<tr class="header">
-<th align="center"> </th>
-<th align="center">vars</th>
-<th align="center">n</th>
-<th align="center">mean</th>
-<th align="center">sd</th>
-<th align="center">median</th>
-<th align="center">trimmed</th>
-<th align="center">mad</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td align="center"><strong>avgFAS_passive</strong></td>
-<td align="center">1</td>
-<td align="center">26</td>
-<td align="center">1.86</td>
-<td align="center">0.8938</td>
-<td align="center">1.7</td>
-<td align="center">1.739</td>
-<td align="center">0.9637</td>
-</tr>
-<tr class="even">
-<td align="center"><strong>avgFAS_active</strong></td>
-<td align="center">2</td>
-<td align="center">26</td>
-<td align="center">3.065</td>
-<td align="center">1.083</td>
-<td align="center">3.125</td>
-<td align="center">3.036</td>
-<td align="center">1.186</td>
-</tr>
-</tbody>
-</table>
-
-<table style="width:96%;">
-<colgroup>
-<col width="29%" />
-<col width="8%" />
-<col width="8%" />
-<col width="11%" />
-<col width="12%" />
-<col width="15%" />
-<col width="11%" />
-</colgroup>
-<thead>
-<tr class="header">
-<th align="center"> </th>
-<th align="center">min</th>
-<th align="center">max</th>
-<th align="center">range</th>
-<th align="center">skew</th>
-<th align="center">kurtosis</th>
-<th align="center">se</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td align="center"><strong>avgFAS_passive</strong></td>
-<td align="center">1</td>
-<td align="center">4.2</td>
-<td align="center">3.2</td>
-<td align="center">1.06</td>
-<td align="center">0.3459</td>
-<td align="center">0.1753</td>
-</tr>
-<tr class="even">
-<td align="center"><strong>avgFAS_active</strong></td>
-<td align="center">1</td>
-<td align="center">5.7</td>
-<td align="center">4.7</td>
-<td align="center">0.2725</td>
-<td align="center">-0.1382</td>
-<td align="center">0.2124</td>
-</tr>
-</tbody>
-</table>
-
-``` r
-t.test(exercise_data$avgFAS_passive, 
-       exercise_data$avgFAS_active, 
-       paired=TRUE, 
-       conf.level=0.95)
+desttest(c("avgfas_passive", "avgfas_active"), exercise_data)
 ```
 
     ## 
     ##  Paired t-test
     ## 
-    ## data:  exercise_data$avgFAS_passive and exercise_data$avgFAS_active
+    ## data:  data[, cols[1]] and data[, cols[2]]
     ## t = -8.1776, df = 25, p-value = 1.571e-08
     ## alternative hypothesis: true difference in means is not equal to 0
     ## 95 percent confidence interval:
@@ -1080,111 +702,13 @@ FS
 --
 
 ``` r
-pander(describe(exercise_data[,6:7]))
-```
-
-<table style="width:100%;">
-<caption>Table continues below</caption>
-<colgroup>
-<col width="25%" />
-<col width="9%" />
-<col width="6%" />
-<col width="10%" />
-<col width="10%" />
-<col width="11%" />
-<col width="12%" />
-<col width="12%" />
-</colgroup>
-<thead>
-<tr class="header">
-<th align="center"> </th>
-<th align="center">vars</th>
-<th align="center">n</th>
-<th align="center">mean</th>
-<th align="center">sd</th>
-<th align="center">median</th>
-<th align="center">trimmed</th>
-<th align="center">mad</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td align="center"><strong>avgFS_passive</strong></td>
-<td align="center">1</td>
-<td align="center">26</td>
-<td align="center">3.487</td>
-<td align="center">1.054</td>
-<td align="center">3.5</td>
-<td align="center">3.593</td>
-<td align="center">0.7413</td>
-</tr>
-<tr class="even">
-<td align="center"><strong>avgFS_active</strong></td>
-<td align="center">2</td>
-<td align="center">26</td>
-<td align="center">2.821</td>
-<td align="center">1.254</td>
-<td align="center">3</td>
-<td align="center">2.952</td>
-<td align="center">0.7413</td>
-</tr>
-</tbody>
-</table>
-
-<table style="width:97%;">
-<colgroup>
-<col width="27%" />
-<col width="9%" />
-<col width="8%" />
-<col width="11%" />
-<col width="13%" />
-<col width="15%" />
-<col width="11%" />
-</colgroup>
-<thead>
-<tr class="header">
-<th align="center"> </th>
-<th align="center">min</th>
-<th align="center">max</th>
-<th align="center">range</th>
-<th align="center">skew</th>
-<th align="center">kurtosis</th>
-<th align="center">se</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td align="center"><strong>avgFS_passive</strong></td>
-<td align="center">0.6</td>
-<td align="center">5</td>
-<td align="center">4.4</td>
-<td align="center">-0.8624</td>
-<td align="center">1.047</td>
-<td align="center">0.2068</td>
-</tr>
-<tr class="even">
-<td align="center"><strong>avgFS_active</strong></td>
-<td align="center">-0.9</td>
-<td align="center">5</td>
-<td align="center">5.9</td>
-<td align="center">-1.096</td>
-<td align="center">1.289</td>
-<td align="center">0.2459</td>
-</tr>
-</tbody>
-</table>
-
-``` r
-t.test(exercise_data$avgFS_passive, 
-       exercise_data$avgFS_active, 
-       paired=TRUE, 
-       conf.level=0.95)
+desttest(c("avgfs_passive", "avgfs_active"), exercise_data)
 ```
 
     ## 
     ##  Paired t-test
     ## 
-    ## data:  exercise_data$avgFS_passive and exercise_data$avgFS_active
+    ## data:  data[, cols[1]] and data[, cols[2]]
     ## t = 2.3705, df = 25, p-value = 0.02579
     ## alternative hypothesis: true difference in means is not equal to 0
     ## 95 percent confidence interval:
@@ -1203,108 +727,97 @@ n-back
 
 ``` r
 nback_prepost <- data %>%
-        filter(exclude=="include") %>%
-        select(sub,countergroup,pre_passive_1B_acc:percdiff_active_2B_RT) %>%
-        select(sub,countergroup,matches("pre|post")) %>%
-        gather(key=condition,value=perf,-sub,-countergroup)
+        filter(exclude == "include") %>%
+        select(sub, countergroup, pre_passive_1b_acc:percdiff_active_2b_rt) %>%
+        select(sub, countergroup, matches("pre|post")) %>%
+        gather(key=condition, value=perf, -sub, -countergroup)
 
 # now split condition column up to it's factors
-nback_prepost<- mutate(nback_prepost,dvtype=
-                                   ifelse(grepl("acc",condition),"acc","rt"))
-nback_prepost<- mutate(nback_prepost,time=
-                                   ifelse(grepl("pre",condition),"pre","post"))
-nback_prepost<- mutate(nback_prepost,intensity=
-                                   ifelse(grepl("passive",condition),"passive","active"))
-nback_prepost<- mutate(nback_prepost,load=
-                                   ifelse(grepl("1B",condition),"1B","2B"))
+nback_prepost <- separate(nback_prepost, "condition", c("time", "intensity", "load", "dvtype"), "_")
 
-write.csv(nback_prepost,"acute_nback-prepost_weng-etal-2015.csv",row.names=FALSE)
+write.csv(nback_prepost, "acute_nback-prepost_weng-etal-2015.csv", row.names=FALSE)
 ```
 
 ``` r
 nback_percdiff <- data %>%
-        filter(exclude=="include") %>%
-        select(sub,countergroup,pre_passive_1B_acc:percdiff_active_2B_RT) %>%
-        select(sub,countergroup,matches("percdiff")) %>%
-        gather(key=condition,value=perf,-sub,-countergroup)
+        filter(exclude == "include") %>%
+        select(sub, countergroup, pre_passive_1b_acc:percdiff_active_2b_rt) %>%
+        select(sub, countergroup, matches("percdiff")) %>%
+        gather(key=condition, value=perf, -sub, -countergroup)
 
 # now split condition column up to it's factors
-nback_percdiff<- mutate(nback_percdiff,dvtype=
-                                   ifelse(grepl("acc",condition),"acc","rt"))
-nback_percdiff<- mutate(nback_percdiff,intensity=
-                                   ifelse(grepl("passive",condition),"passive","active"))
-nback_percdiff<- mutate(nback_percdiff,load=
-                                   ifelse(grepl("1B",condition),"1B","2B"))
-write.csv(nback_percdiff,"acute_nback-percdiff_weng-etal-2015.csv",row.names=FALSE)
+nback_percdiff <- separate(nback_percdiff, "condition", c("drop", "intensity", "load", "dvtype"), "_")
+nback_percdiff$drop <- NULL
+write.csv(nback_percdiff, "acute_nback-percdiff_weng-etal-2015.csv", row.names=FALSE)
 ```
 
 ### set factors
 
 ``` r
 nback_prepost$time <- as.factor(nback_prepost$time)
-nback_prepost$time <- relevel(nback_prepost$time,"pre")
+nback_prepost$time <- relevel(nback_prepost$time, "pre")
 nback_prepost$intensity <- as.factor(nback_prepost$intensity)
-nback_prepost$intensity <- relevel(nback_prepost$intensity,"passive")
+nback_prepost$intensity <- relevel(nback_prepost$intensity, "passive")
 nback_prepost$load <- as.factor(nback_prepost$load)
 
 nback_percdiff$intensity <- as.factor(nback_percdiff$intensity)
-nback_percdiff$intensity <- relevel(nback_percdiff$intensity,"passive")
+nback_percdiff$intensity <- relevel(nback_percdiff$intensity, "passive")
 nback_percdiff$load <- as.factor(nback_percdiff$load)
 ```
 
 ### plot nback
 
 ``` r
-ggplot(subset(nback_prepost,dvtype=="acc"), aes(x=time,y=perf,group=sub)) + 
+ggplot(subset(nback_prepost, dvtype == "acc"), aes(x=time, y=perf, group=sub)) + 
   geom_line() + 
   geom_point() +
-        facet_grid(~intensity*load) +
-        labs(title="Accuracy",y="Accuracy") + 
-        theme(strip.text = element_text(face="bold", size=15,lineheight=5.0), 
-        strip.background = element_rect(colour="black", size=1))
+  facet_grid(~intensity * load) +
+  labs(title = "Accuracy", y = "Accuracy") + 
+  theme(strip.text = element_text(face = "bold", size = 15, lineheight = 5.0), 
+  strip.background = element_rect(colour = "black", size = 1))
 ```
 
 ![](analysis-notebook_files/figure-markdown_github/unnamed-chunk-13-1.png)
 
 ``` r
-ggplot(subset(nback_prepost,dvtype=="rt"), aes(x=time,y=perf,group=sub)) + 
+ggplot(subset(nback_prepost, dvtype == "rt"), aes(x = time, y = perf, group = sub)) + 
   geom_line() + 
   geom_point() +
-        facet_grid(~intensity*load) +
-        labs(title="Reaction Time",y="RT") + 
-        theme(strip.text = element_text(face="bold", size=15,lineheight=5.0), 
-        strip.background = element_rect(colour="black", size=1))
+  facet_grid(~intensity * load) +
+  labs(title = "Reaction Time", y = "RT") + 
+  theme(strip.text = element_text(face = "bold", size = 15, lineheight = 5.0), 
+  strip.background = element_rect(colour = "black", size = 1))
 ```
 
 ![](analysis-notebook_files/figure-markdown_github/unnamed-chunk-14-1.png)
 
 ``` r
-ggplot(subset(nback_percdiff,dvtype=="rt"), aes(x=intensity,y=perf,fill=load)) + 
-  scale_fill_manual(values=c("#E3871C", "#F5BD78")) +
+ggplot(subset(nback_percdiff,dvtype == "rt"), aes(x = intensity, y = perf, fill = load)) + 
+  scale_fill_manual(values = c("#E3871C", "#F5BD78")) +
   geom_boxplot() + 
-  labs(title="Acute RT %change on N-back",y="%Diff",x="",fill="load") +
-  theme(title=element_text(size=16, face='bold'),
-        axis.text.x = element_text(size=16),
-        axis.text.y = element_text(size=15),
-        axis.title.y = element_text(size=16),
-        legend.text = element_text(size=15),
-        legend.title = element_text(size=15))
+  labs(title = "Acute RT %change on N-back", y = "%Diff", x= "", fill = "load") +
+  theme(title = element_text(size = 16, face = "bold"),
+        axis.text.x = element_text(size = 16),
+        axis.text.y = element_text(size = 15),
+        axis.title.y = element_text(size = 16),
+        legend.text = element_text(size = 15),
+        legend.title = element_text(size = 15))
 ```
 
 ![](analysis-notebook_files/figure-markdown_github/unnamed-chunk-15-1.png)
 
 ``` r
-ggplot(subset(nback_percdiff,dvtype=="rt"), aes(x=intensity,y=perf)) + 
-  stat_summary(aes(y = perf), size=.5, fun.y = mean, geom="bar",size=1) + 
-  stat_summary(fun.data=mean_cl_normal, geom="errorbar", size=.5,width=.3) + 
+ggplot(subset(nback_percdiff, dvtype == "rt"), aes(x = intensity, y = perf)) + 
+  stat_summary(aes(y = perf), size = .5, fun.y = mean, geom = "bar", size = 1) + 
+  stat_summary(fun.data = mean_cl_normal, geom = "errorbar", size = .5, width = .3) + 
         facet_grid(~load) +
-        labs(title="Acute RT %change on N-back",y="%Diff",x="") +
-        theme(title=element_text(size=16, face='bold'),
-        axis.text.x = element_text(size=16),
-        axis.text.y = element_text(size=15),
-        axis.title.y = element_text(size=16),
-        legend.text = element_text(size=15),
-        legend.title = element_text(size=15))
+        labs(title = "Acute RT %change on N-back", y = "%Diff", x = "") +
+        theme(title = element_text(size = 16, face = "bold"),
+        axis.text.x = element_text(size = 16),
+        axis.text.y = element_text(size = 15),
+        axis.title.y = element_text(size = 16),
+        legend.text = element_text(size = 15),
+        legend.title = element_text(size = 15))
 ```
 
     ## Warning: The plyr::rename operation has created duplicates for the
@@ -1313,17 +826,17 @@ ggplot(subset(nback_percdiff,dvtype=="rt"), aes(x=intensity,y=perf)) +
 ![](analysis-notebook_files/figure-markdown_github/unnamed-chunk-15-2.png)
 
 ``` r
-ggplot(subset(nback_percdiff,dvtype=="rt"), aes(x=load,y=perf)) + 
-  stat_summary(aes(y = perf), size=.5, fun.y = mean, geom="bar",size=1) + 
-  stat_summary(fun.data=mean_cl_normal, geom="errorbar", size=.5,width=.3) + 
+ggplot(subset(nback_percdiff, dvtype == "rt"), aes(x = load,y = perf)) + 
+  stat_summary(aes(y = perf), size = .5, fun.y = mean, geom = "bar", size = 1) + 
+  stat_summary(fun.data = mean_cl_normal, geom = "errorbar", size = .5, width = .3) + 
         facet_grid(~intensity) +
-        labs(title="Acute RT %change on N-back",y="%Diff",x="") +
-        theme(title=element_text(size=16, face='bold'),
-        axis.text.x = element_text(size=16),
-        axis.text.y = element_text(size=15),
-        axis.title.y = element_text(size=16),
-        legend.text = element_text(size=15),
-        legend.title = element_text(size=15))
+        labs(title = "Acute RT %change on N-back", y = "%Diff", x= "") +
+        theme(title = element_text(size = 16, face = "bold"),
+        axis.text.x = element_text(size = 16),
+        axis.text.y = element_text(size = 15),
+        axis.title.y = element_text(size = 16),
+        legend.text = element_text(size = 15),
+        legend.title = element_text(size = 15))
 ```
 
     ## Warning: The plyr::rename operation has created duplicates for the
@@ -1389,7 +902,7 @@ ggplot(subset(nback_percdiff,dvtype=="acc"), aes(x=load,y=perf)) +
 #### repeated measures anova with time as a factor
 
 ``` r
-aovACC<-aov_car(perf~time*intensity*load+Error(sub/time*intensity*load),subset(nback_prepost,dvtype=="acc"))
+aovACC <- aov_car(perf ~ time * intensity * load + Error(sub / time * intensity * load), subset(nback_prepost, dvtype == "acc"))
 nice(aovACC)
 ```
 
@@ -1412,7 +925,7 @@ nice(aovACC)
 **reaction time**
 
 ``` r
-aovRT<-aov_car(perf~intensity*load+Error(sub/intensity*load),subset(nback_percdiff,dvtype=="rt"))
+aovRT <- aov_car(perf ~ intensity * load + Error(sub / intensity * load), subset(nback_percdiff, dvtype == "rt"))
 nice(aovRT)
 ```
 
@@ -1427,19 +940,19 @@ nice(aovRT)
     ## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '+' 0.1 ' ' 1
 
 ``` r
-aovRT_fitted<-lsmeans(aovRT,~load|intensity)
+aovRT_fitted <- lsmeans(aovRT, ~load|intensity)
 aovRT_fitted
 ```
 
     ## intensity = passive:
     ##  load      lsmean         SE    df    lower.CL    upper.CL
-    ##  X1B  -0.08154058 0.01658916 66.16 -0.11466039 -0.04842076
-    ##  X2B  -0.06997877 0.01658916 66.16 -0.10309859 -0.03685895
+    ##  X1b  -0.08154058 0.01658916 66.16 -0.11466039 -0.04842076
+    ##  X2b  -0.06997877 0.01658916 66.16 -0.10309859 -0.03685895
     ## 
     ## intensity = active:
     ##  load      lsmean         SE    df    lower.CL    upper.CL
-    ##  X1B  -0.07249350 0.01658916 66.16 -0.10561332 -0.03937369
-    ##  X2B  -0.05266686 0.01658916 66.16 -0.08578667 -0.01954704
+    ##  X1b  -0.07249350 0.01658916 66.16 -0.10561332 -0.03937369
+    ##  X2b  -0.05266686 0.01658916 66.16 -0.08578667 -0.01954704
     ## 
     ## Confidence level used: 0.95
 
@@ -1449,16 +962,16 @@ pairs(aovRT_fitted)
 
     ## intensity = passive:
     ##  contrast     estimate         SE    df t.ratio p.value
-    ##  X1B - X2B -0.01156181 0.01577587 44.14  -0.733  0.4675
+    ##  X1b - X2b -0.01156181 0.01577587 44.14  -0.733  0.4675
     ## 
     ## intensity = active:
     ##  contrast     estimate         SE    df t.ratio p.value
-    ##  X1B - X2B -0.01982665 0.01577587 44.14  -1.257  0.2154
+    ##  X1b - X2b -0.01982665 0.01577587 44.14  -1.257  0.2154
 
 **accuracy**
 
 ``` r
-aovACC<-aov_car(perf~intensity*load+Error(sub/intensity*load),subset(nback_percdiff,dvtype=="acc"))
+aovACC <- aov_car(perf ~ intensity * load + Error(sub / intensity * load), subset(nback_percdiff, dvtype == "acc"))
 nice(aovACC)
 ```
 
@@ -1473,19 +986,19 @@ nice(aovACC)
     ## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '+' 0.1 ' ' 1
 
 ``` r
-aovACC_fitted<-lsmeans(aovACC,~load|intensity)
+aovACC_fitted <- lsmeans(aovACC, ~load|intensity)
 aovACC_fitted
 ```
 
     ## intensity = passive:
     ##  load   lsmean       SE    df  lower.CL upper.CL
-    ##  X1B  2.711715 1.197933 92.68 0.3327485 5.090682
-    ##  X2B  2.524510 1.197933 92.68 0.1455435 4.903477
+    ##  X1b  2.711715 1.197933 92.68 0.3327485 5.090682
+    ##  X2b  2.524510 1.197933 92.68 0.1455435 4.903477
     ## 
     ## intensity = active:
     ##  load   lsmean       SE    df  lower.CL upper.CL
-    ##  X1B  2.565791 1.197933 92.68 0.1868247 4.944758
-    ##  X2B  6.397401 1.197933 92.68 4.0184347 8.776368
+    ##  X1b  2.565791 1.197933 92.68 0.1868247 4.944758
+    ##  X2b  6.397401 1.197933 92.68 4.0184347 8.776368
     ## 
     ## Confidence level used: 0.95
 
@@ -1495,18 +1008,18 @@ pairs(aovACC_fitted)
 
     ## intensity = passive:
     ##  contrast   estimate       SE    df t.ratio p.value
-    ##  X1B - X2B  0.187205 1.599024 45.82   0.117  0.9073
+    ##  X1b - X2b  0.187205 1.599024 45.82   0.117  0.9073
     ## 
     ## intensity = active:
     ##  contrast   estimate       SE    df t.ratio p.value
-    ##  X1B - X2B -3.831610 1.599024 45.82  -2.396  0.0207
+    ##  X1b - X2b -3.831610 1.599024 45.82  -2.396  0.0207
 
 **Accuracy with glm and covariates **
 
 Set to effect coding
 
 ``` r
-contrasts(nback_prepost$time) <- c(-.5,.5)
+contrasts(nback_prepost$time) <- c(-.5, .5)
 contrasts(nback_prepost$time)
 ```
 
@@ -1515,7 +1028,7 @@ contrasts(nback_prepost$time)
     ## post  0.5
 
 ``` r
-contrasts(nback_prepost$intensity) <- c(-.5,.5)
+contrasts(nback_prepost$intensity) <- c(-.5, .5)
 contrasts(nback_prepost$intensity)
 ```
 
@@ -1524,18 +1037,18 @@ contrasts(nback_prepost$intensity)
     ## active   0.5
 
 ``` r
-contrasts(nback_prepost$load) <- c(-.5,.5)
+contrasts(nback_prepost$load) <- c(-.5, .5)
 contrasts(nback_prepost$load)
 ```
 
     ##    [,1]
-    ## 1B -0.5
-    ## 2B  0.5
+    ## 1b -0.5
+    ## 2b  0.5
 
 ``` r
-lm_acc<-lmer(perf ~ time*intensity*load + (1 + time + intensity + load |sub), data=subset(nback_prepost,dvtype=="acc"))
-lm_acc2<-lmer(perf ~ time*intensity*load + (1 |sub), data=subset(nback_prepost,dvtype=="acc"))
-anova(lm_acc,lm_acc2)
+lm_acc <- lmer(perf ~ time * intensity * load + (1 + time + intensity + load | sub), data = subset(nback_prepost, dvtype == "acc"))
+lm_acc2<-lmer(perf ~ time * intensity * load + (1 | sub), data = subset(nback_prepost, dvtype == "acc"))
+anova(lm_acc, lm_acc2)
 ```
 
     ## refitting model(s) with ML (instead of REML)
@@ -1609,7 +1122,7 @@ summary(lm_acc)
     ## tm1:ntns1:1  0.000  0.000  0.000  0.000  0.000  0.000  0.000
 
 ``` r
-cat_plot(lm_acc, pred = time, modx = intensity, mod2 = load, geom="line")
+cat_plot(lm_acc, pred = time, modx = intensity, mod2 = load, geom = "line")
 ```
 
     ## Confidence intervals for merMod models is an experimental feature. The
@@ -1624,39 +1137,26 @@ flanker
 ``` r
 flanker_prepost <- data %>%
         filter(exclude=="include") %>%
-        select(sub,countergroup,pre_passive_inc_acc:percdiff_passive_con_RT) %>%
+        select(sub,countergroup,pre_passive_inc_acc:percdiff_passive_con_rt) %>%
         select(sub,countergroup,matches("pre|post")) %>%
         gather(key=condition,value=perf,-sub,-countergroup)
 
 # now split condition column up to it's factors
-flanker_prepost<- mutate(flanker_prepost,dvtype=
-                                   ifelse(grepl("acc",condition),"acc","rt"))
-flanker_prepost<- mutate(flanker_prepost,time=
-                                   ifelse(grepl("pre",condition),"pre","post"))
-flanker_prepost<- mutate(flanker_prepost,intensity=
-                                   ifelse(grepl("passive",condition),"passive","active"))
-flanker_prepost<- mutate(flanker_prepost,load=
-                                   ifelse(grepl("inc",condition),"inc",
-                                          ifelse(grepl("con",condition),"con","neu")))
+flanker_prepost <- separate(flanker_prepost, "condition", c("time", "intensity", "load", "dvtype"), "_")
 
-write.csv(flanker_prepost,"acute_flanker-prepost_weng-etal-2015.csv",row.names=FALSE)
+write.csv(flanker_prepost, "acute_flanker-prepost_weng-etal-2015.csv", row.names=FALSE)
 ```
 
 ``` r
 flanker_percdiff <- data %>%
         filter(exclude=="include") %>%
-        select(sub,countergroup,pre_passive_inc_acc:percdiff_passive_con_RT) %>%
+        select(sub,countergroup,pre_passive_inc_acc:percdiff_passive_con_rt) %>%
         select(sub,countergroup,matches("percdiff")) %>%
         gather(key=condition,value=perf,-sub,-countergroup)
 
 # now split condition column up to it's factors
-flanker_percdiff<- mutate(flanker_percdiff,dvtype=
-                                   ifelse(grepl("acc",condition),"acc","rt"))
-flanker_percdiff<- mutate(flanker_percdiff,intensity=
-                                   ifelse(grepl("passive",condition),"passive","active"))
-flanker_percdiff<- mutate(flanker_percdiff,load=
-                                   ifelse(grepl("inc",condition),"inc",
-                                          ifelse(grepl("con",condition),"con","neu")))
+flanker_percdiff <- separate(flanker_percdiff, "condition", c("drop", "intensity", "load", "dvtype"), "_")
+flanker_percdiff$drop <- NULL
 
 write.csv(flanker_percdiff,"acute_flanker-percdiff_weng-etal-2015.csv",row.names=FALSE)
 ```

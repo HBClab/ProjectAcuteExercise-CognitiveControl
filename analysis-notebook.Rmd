@@ -93,6 +93,7 @@ desttest(c("hrmax_pass", "hrmax_act"), exercise_data)
 ## RPE
 ```{r}
 desttest(c("avgrpe_passive", "avgrpe_active"), exercise_data)
+
 ```
 
 
