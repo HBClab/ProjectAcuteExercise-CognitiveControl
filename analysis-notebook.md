@@ -10,6 +10,8 @@ Nov 2018
 
 **Citation**: Weng, T. B., Pierce, G. L., Darling, W. G., & Voss, M. W. (2015). Differential effects of acute exercise on distinct aspects of executive function. Medicine and science in sports and exercise, 47(7), 1460-1469.
 
+**Code reviews for this notebook** \* James Kent \* Tim Weng
+
 setup
 =====
 
@@ -27,20 +29,18 @@ demographics in Table 1
 demogs <- data %>% 
         select(age,gender,edu,height,weight,bmi,godin_score) 
 
-pander(describe(demogs))
+pander(describe(demogs, skew=FALSE, ranges = FALSE, IQR = TRUE))
 ```
 
-<table>
-<caption>Table continues below</caption>
+<table style="width:94%;">
 <colgroup>
-<col width="23%" />
+<col width="25%" />
 <col width="9%" />
 <col width="6%" />
-<col width="10%" />
-<col width="12%" />
 <col width="11%" />
-<col width="12%" />
-<col width="12%" />
+<col width="13%" />
+<col width="13%" />
+<col width="13%" />
 </colgroup>
 <thead>
 <tr class="header">
@@ -49,9 +49,8 @@ pander(describe(demogs))
 <th align="center">n</th>
 <th align="center">mean</th>
 <th align="center">sd</th>
-<th align="center">median</th>
-<th align="center">trimmed</th>
-<th align="center">mad</th>
+<th align="center">se</th>
+<th align="center">IQR</th>
 </tr>
 </thead>
 <tbody>
@@ -61,9 +60,8 @@ pander(describe(demogs))
 <td align="center">26</td>
 <td align="center">25.23</td>
 <td align="center">2.847</td>
-<td align="center">26</td>
-<td align="center">25.32</td>
-<td align="center">2.965</td>
+<td align="center">0.5583</td>
+<td align="center">4.75</td>
 </tr>
 <tr class="even">
 <td align="center"><strong>gender</strong>*</td>
@@ -71,9 +69,8 @@ pander(describe(demogs))
 <td align="center">26</td>
 <td align="center">1.538</td>
 <td align="center">0.5084</td>
-<td align="center">2</td>
-<td align="center">1.545</td>
-<td align="center">0</td>
+<td align="center">0.0997</td>
+<td align="center">1</td>
 </tr>
 <tr class="odd">
 <td align="center"><strong>edu</strong></td>
@@ -81,9 +78,8 @@ pander(describe(demogs))
 <td align="center">26</td>
 <td align="center">17.77</td>
 <td align="center">2.736</td>
-<td align="center">17.75</td>
-<td align="center">17.73</td>
-<td align="center">1.853</td>
+<td align="center">0.5365</td>
+<td align="center">2.75</td>
 </tr>
 <tr class="even">
 <td align="center"><strong>height</strong></td>
@@ -91,9 +87,8 @@ pander(describe(demogs))
 <td align="center">26</td>
 <td align="center">1.74</td>
 <td align="center">0.08227</td>
-<td align="center">1.753</td>
-<td align="center">1.744</td>
-<td align="center">0.07532</td>
+<td align="center">0.01613</td>
+<td align="center">0.1193</td>
 </tr>
 <tr class="odd">
 <td align="center"><strong>weight</strong></td>
@@ -101,9 +96,8 @@ pander(describe(demogs))
 <td align="center">26</td>
 <td align="center">70.88</td>
 <td align="center">10.1</td>
-<td align="center">69.4</td>
-<td align="center">70.51</td>
-<td align="center">10.96</td>
+<td align="center">1.981</td>
+<td align="center">15.2</td>
 </tr>
 <tr class="even">
 <td align="center"><strong>bmi</strong></td>
@@ -111,9 +105,8 @@ pander(describe(demogs))
 <td align="center">26</td>
 <td align="center">23.35</td>
 <td align="center">2.528</td>
-<td align="center">22.64</td>
-<td align="center">23.19</td>
-<td align="center">2.501</td>
+<td align="center">0.4958</td>
+<td align="center">2.921</td>
 </tr>
 <tr class="odd">
 <td align="center"><strong>godin_score</strong></td>
@@ -121,122 +114,31 @@ pander(describe(demogs))
 <td align="center">25</td>
 <td align="center">53.26</td>
 <td align="center">23.23</td>
-<td align="center">54</td>
-<td align="center">53.17</td>
-<td align="center">26.69</td>
-</tr>
-</tbody>
-</table>
-
-<table>
-<colgroup>
-<col width="24%" />
-<col width="10%" />
-<col width="10%" />
-<col width="12%" />
-<col width="13%" />
-<col width="14%" />
-<col width="14%" />
-</colgroup>
-<thead>
-<tr class="header">
-<th align="center"> </th>
-<th align="center">min</th>
-<th align="center">max</th>
-<th align="center">range</th>
-<th align="center">skew</th>
-<th align="center">kurtosis</th>
-<th align="center">se</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td align="center"><strong>age</strong></td>
-<td align="center">20</td>
-<td align="center">30</td>
-<td align="center">10</td>
-<td align="center">-0.2844</td>
-<td align="center">-1.266</td>
-<td align="center">0.5583</td>
-</tr>
-<tr class="even">
-<td align="center"><strong>gender</strong>*</td>
-<td align="center">1</td>
-<td align="center">2</td>
-<td align="center">1</td>
-<td align="center">-0.1455</td>
-<td align="center">-2.053</td>
-<td align="center">0.0997</td>
-</tr>
-<tr class="odd">
-<td align="center"><strong>edu</strong></td>
-<td align="center">13</td>
-<td align="center">23</td>
-<td align="center">10</td>
-<td align="center">0.04106</td>
-<td align="center">-0.929</td>
-<td align="center">0.5365</td>
-</tr>
-<tr class="even">
-<td align="center"><strong>height</strong></td>
-<td align="center">1.549</td>
-<td align="center">1.88</td>
-<td align="center">0.3302</td>
-<td align="center">-0.5204</td>
-<td align="center">-0.5734</td>
-<td align="center">0.01613</td>
-</tr>
-<tr class="odd">
-<td align="center"><strong>weight</strong></td>
-<td align="center">48.53</td>
-<td align="center">94.35</td>
-<td align="center">45.81</td>
-<td align="center">0.2599</td>
-<td align="center">-0.1714</td>
-<td align="center">1.981</td>
-</tr>
-<tr class="even">
-<td align="center"><strong>bmi</strong></td>
-<td align="center">19.94</td>
-<td align="center">28.61</td>
-<td align="center">8.67</td>
-<td align="center">0.6501</td>
-<td align="center">-0.6785</td>
-<td align="center">0.4958</td>
-</tr>
-<tr class="odd">
-<td align="center"><strong>godin_score</strong></td>
-<td align="center">12</td>
-<td align="center">93</td>
-<td align="center">81</td>
-<td align="center">0.04111</td>
-<td align="center">-1.218</td>
 <td align="center">4.647</td>
+<td align="center">35.5</td>
 </tr>
 </tbody>
 </table>
 
 ``` r
-pander(describeBy(demogs,group="gender"))
+pander(describeBy(demogs, skew=FALSE, ranges = FALSE, IQR = TRUE, group = "gender"))
 ```
 
-    ## Warning in pander.default(describeBy(demogs, group = "gender")): No
-    ## pander.method for "psych", reverting to default.No pander.method for
-    ## "describeBy", reverting to default.
+    ## Warning in pander.default(describeBy(demogs, skew = FALSE, ranges
+    ## = FALSE, : No pander.method for "psych", reverting to default.No
+    ## pander.method for "describeBy", reverting to default.
 
 -   **male**:
 
-    <table>
-    <caption>Table continues below</caption>
+    <table style="width:94%;">
     <colgroup>
-    <col width="23%" />
+    <col width="25%" />
     <col width="9%" />
     <col width="6%" />
-    <col width="10%" />
-    <col width="12%" />
     <col width="11%" />
-    <col width="12%" />
-    <col width="12%" />
+    <col width="13%" />
+    <col width="13%" />
+    <col width="13%" />
     </colgroup>
     <thead>
     <tr class="header">
@@ -245,9 +147,8 @@ pander(describeBy(demogs,group="gender"))
     <th align="center">n</th>
     <th align="center">mean</th>
     <th align="center">sd</th>
-    <th align="center">median</th>
-    <th align="center">trimmed</th>
-    <th align="center">mad</th>
+    <th align="center">se</th>
+    <th align="center">IQR</th>
     </tr>
     </thead>
     <tbody>
@@ -257,9 +158,8 @@ pander(describeBy(demogs,group="gender"))
     <td align="center">12</td>
     <td align="center">25.83</td>
     <td align="center">2.588</td>
-    <td align="center">26</td>
-    <td align="center">25.9</td>
-    <td align="center">2.965</td>
+    <td align="center">0.747</td>
+    <td align="center">3.25</td>
     </tr>
     <tr class="even">
     <td align="center"><strong>gender</strong>*</td>
@@ -267,8 +167,7 @@ pander(describeBy(demogs,group="gender"))
     <td align="center">12</td>
     <td align="center">1</td>
     <td align="center">0</td>
-    <td align="center">1</td>
-    <td align="center">1</td>
+    <td align="center">0</td>
     <td align="center">0</td>
     </tr>
     <tr class="odd">
@@ -277,9 +176,8 @@ pander(describeBy(demogs,group="gender"))
     <td align="center">12</td>
     <td align="center">17.96</td>
     <td align="center">3.122</td>
-    <td align="center">17</td>
-    <td align="center">17.85</td>
-    <td align="center">3.706</td>
+    <td align="center">0.9013</td>
+    <td align="center">5.25</td>
     </tr>
     <tr class="even">
     <td align="center"><strong>height</strong></td>
@@ -287,9 +185,8 @@ pander(describeBy(demogs,group="gender"))
     <td align="center">12</td>
     <td align="center">1.779</td>
     <td align="center">0.05594</td>
-    <td align="center">1.778</td>
-    <td align="center">1.779</td>
-    <td align="center">0.03766</td>
+    <td align="center">0.01615</td>
+    <td align="center">0.05397</td>
     </tr>
     <tr class="odd">
     <td align="center"><strong>weight</strong></td>
@@ -297,9 +194,8 @@ pander(describeBy(demogs,group="gender"))
     <td align="center">12</td>
     <td align="center">74.49</td>
     <td align="center">7.48</td>
-    <td align="center">74.03</td>
-    <td align="center">74.23</td>
-    <td align="center">7.935</td>
+    <td align="center">2.159</td>
+    <td align="center">9.979</td>
     </tr>
     <tr class="even">
     <td align="center"><strong>bmi</strong></td>
@@ -307,9 +203,8 @@ pander(describeBy(demogs,group="gender"))
     <td align="center">12</td>
     <td align="center">23.57</td>
     <td align="center">2.465</td>
-    <td align="center">22.51</td>
-    <td align="center">23.41</td>
-    <td align="center">0.9867</td>
+    <td align="center">0.7116</td>
+    <td align="center">3.344</td>
     </tr>
     <tr class="odd">
     <td align="center"><strong>godin_score</strong></td>
@@ -317,114 +212,23 @@ pander(describeBy(demogs,group="gender"))
     <td align="center">11</td>
     <td align="center">54.95</td>
     <td align="center">26.57</td>
-    <td align="center">49</td>
-    <td align="center">55.5</td>
-    <td align="center">33.36</td>
-    </tr>
-    </tbody>
-    </table>
-
-    <table>
-    <colgroup>
-    <col width="23%" />
-    <col width="10%" />
-    <col width="10%" />
-    <col width="11%" />
-    <col width="14%" />
-    <col width="14%" />
-    <col width="14%" />
-    </colgroup>
-    <thead>
-    <tr class="header">
-    <th align="center"> </th>
-    <th align="center">min</th>
-    <th align="center">max</th>
-    <th align="center">range</th>
-    <th align="center">skew</th>
-    <th align="center">kurtosis</th>
-    <th align="center">se</th>
-    </tr>
-    </thead>
-    <tbody>
-    <tr class="odd">
-    <td align="center"><strong>age</strong></td>
-    <td align="center">21</td>
-    <td align="center">30</td>
-    <td align="center">9</td>
-    <td align="center">-0.3515</td>
-    <td align="center">-0.88</td>
-    <td align="center">0.747</td>
-    </tr>
-    <tr class="even">
-    <td align="center"><strong>gender</strong>*</td>
-    <td align="center">1</td>
-    <td align="center">1</td>
-    <td align="center">0</td>
-    <td align="center">NA</td>
-    <td align="center">NA</td>
-    <td align="center">0</td>
-    </tr>
-    <tr class="odd">
-    <td align="center"><strong>edu</strong></td>
-    <td align="center">14</td>
-    <td align="center">23</td>
-    <td align="center">9</td>
-    <td align="center">0.2479</td>
-    <td align="center">-1.536</td>
-    <td align="center">0.9013</td>
-    </tr>
-    <tr class="even">
-    <td align="center"><strong>height</strong></td>
-    <td align="center">1.676</td>
-    <td align="center">1.88</td>
-    <td align="center">0.2032</td>
-    <td align="center">0.04312</td>
-    <td align="center">-0.7343</td>
-    <td align="center">0.01615</td>
-    </tr>
-    <tr class="odd">
-    <td align="center"><strong>weight</strong></td>
-    <td align="center">62.32</td>
-    <td align="center">89.36</td>
-    <td align="center">27.03</td>
-    <td align="center">0.231</td>
-    <td align="center">-0.9043</td>
-    <td align="center">2.159</td>
-    </tr>
-    <tr class="even">
-    <td align="center"><strong>bmi</strong></td>
-    <td align="center">20.59</td>
-    <td align="center">28.25</td>
-    <td align="center">7.658</td>
-    <td align="center">0.7234</td>
-    <td align="center">-1.08</td>
-    <td align="center">0.7116</td>
-    </tr>
-    <tr class="odd">
-    <td align="center"><strong>godin_score</strong></td>
-    <td align="center">12</td>
-    <td align="center">93</td>
-    <td align="center">81</td>
-    <td align="center">-0.04331</td>
-    <td align="center">-1.614</td>
     <td align="center">8.01</td>
+    <td align="center">40.5</td>
     </tr>
     </tbody>
     </table>
 
 -   **female**:
 
-    <table>
-    <caption>Table continues below</caption>
+    <table style="width:92%;">
     <colgroup>
-    <col width="24%" />
+    <col width="25%" />
     <col width="9%" />
     <col width="6%" />
-    <col width="10%" />
+    <col width="11%" />
     <col width="13%" />
     <col width="12%" />
-    <col width="13%" />
-    <col width="9%" />
+    <col width="12%" />
     </colgroup>
     <thead>
     <tr class="header">
@@ -433,9 +237,8 @@ pander(describeBy(demogs,group="gender"))
     <th align="center">n</th>
     <th align="center">mean</th>
     <th align="center">sd</th>
-    <th align="center">median</th>
-    <th align="center">trimmed</th>
-    <th align="center">mad</th>
+    <th align="center">se</th>
+    <th align="center">IQR</th>
     </tr>
     </thead>
     <tbody>
@@ -445,9 +248,8 @@ pander(describeBy(demogs,group="gender"))
     <td align="center">14</td>
     <td align="center">24.71</td>
     <td align="center">3.049</td>
-    <td align="center">24</td>
-    <td align="center">24.83</td>
-    <td align="center">4.448</td>
+    <td align="center">0.8149</td>
+    <td align="center">5.75</td>
     </tr>
     <tr class="even">
     <td align="center"><strong>gender</strong>*</td>
@@ -455,8 +257,7 @@ pander(describeBy(demogs,group="gender"))
     <td align="center">14</td>
     <td align="center">2</td>
     <td align="center">0</td>
-    <td align="center">2</td>
-    <td align="center">2</td>
+    <td align="center">0</td>
     <td align="center">0</td>
     </tr>
     <tr class="odd">
@@ -465,9 +266,8 @@ pander(describeBy(demogs,group="gender"))
     <td align="center">14</td>
     <td align="center">17.61</td>
     <td align="center">2.467</td>
-    <td align="center">18.5</td>
-    <td align="center">17.62</td>
-    <td align="center">1.112</td>
+    <td align="center">0.6592</td>
+    <td align="center">2</td>
     </tr>
     <tr class="even">
     <td align="center"><strong>height</strong></td>
@@ -475,9 +275,8 @@ pander(describeBy(demogs,group="gender"))
     <td align="center">14</td>
     <td align="center">1.708</td>
     <td align="center">0.08866</td>
-    <td align="center">1.715</td>
-    <td align="center">1.711</td>
-    <td align="center">0.113</td>
+    <td align="center">0.0237</td>
+    <td align="center">0.1365</td>
     </tr>
     <tr class="odd">
     <td align="center"><strong>weight</strong></td>
@@ -485,9 +284,8 @@ pander(describeBy(demogs,group="gender"))
     <td align="center">14</td>
     <td align="center">67.78</td>
     <td align="center">11.24</td>
-    <td align="center">64.86</td>
-    <td align="center">67.17</td>
-    <td align="center">6.725</td>
+    <td align="center">3.005</td>
+    <td align="center">8.958</td>
     </tr>
     <tr class="even">
     <td align="center"><strong>bmi</strong></td>
@@ -495,9 +293,8 @@ pander(describeBy(demogs,group="gender"))
     <td align="center">14</td>
     <td align="center">23.16</td>
     <td align="center">2.657</td>
-    <td align="center">23.15</td>
-    <td align="center">22.97</td>
-    <td align="center">2.285</td>
+    <td align="center">0.7102</td>
+    <td align="center">3.475</td>
     </tr>
     <tr class="odd">
     <td align="center"><strong>godin_score</strong></td>
@@ -505,97 +302,8 @@ pander(describeBy(demogs,group="gender"))
     <td align="center">14</td>
     <td align="center">51.93</td>
     <td align="center">21.2</td>
-    <td align="center">54.5</td>
-    <td align="center">51.42</td>
-    <td align="center">20.02</td>
-    </tr>
-    </tbody>
-    </table>
-
-    <table>
-    <colgroup>
-    <col width="25%" />
-    <col width="11%" />
-    <col width="11%" />
-    <col width="12%" />
-    <col width="13%" />
-    <col width="15%" />
-    <col width="11%" />
-    </colgroup>
-    <thead>
-    <tr class="header">
-    <th align="center"> </th>
-    <th align="center">min</th>
-    <th align="center">max</th>
-    <th align="center">range</th>
-    <th align="center">skew</th>
-    <th align="center">kurtosis</th>
-    <th align="center">se</th>
-    </tr>
-    </thead>
-    <tbody>
-    <tr class="odd">
-    <td align="center"><strong>age</strong></td>
-    <td align="center">20</td>
-    <td align="center">28</td>
-    <td align="center">8</td>
-    <td align="center">-0.1111</td>
-    <td align="center">-1.72</td>
-    <td align="center">0.8149</td>
-    </tr>
-    <tr class="even">
-    <td align="center"><strong>gender</strong>*</td>
-    <td align="center">2</td>
-    <td align="center">2</td>
-    <td align="center">0</td>
-    <td align="center">NA</td>
-    <td align="center">NA</td>
-    <td align="center">0</td>
-    </tr>
-    <tr class="odd">
-    <td align="center"><strong>edu</strong></td>
-    <td align="center">13</td>
-    <td align="center">22</td>
-    <td align="center">9</td>
-    <td align="center">-0.4335</td>
-    <td align="center">-0.7143</td>
-    <td align="center">0.6592</td>
-    </tr>
-    <tr class="even">
-    <td align="center"><strong>height</strong></td>
-    <td align="center">1.549</td>
-    <td align="center">1.829</td>
-    <td align="center">0.2794</td>
-    <td align="center">-0.1746</td>
-    <td align="center">-1.4</td>
-    <td align="center">0.0237</td>
-    </tr>
-    <tr class="odd">
-    <td align="center"><strong>weight</strong></td>
-    <td align="center">48.53</td>
-    <td align="center">94.35</td>
-    <td align="center">45.81</td>
-    <td align="center">0.7164</td>
-    <td align="center">0.1294</td>
-    <td align="center">3.005</td>
-    </tr>
-    <tr class="even">
-    <td align="center"><strong>bmi</strong></td>
-    <td align="center">19.94</td>
-    <td align="center">28.61</td>
-    <td align="center">8.67</td>
-    <td align="center">0.5747</td>
-    <td align="center">-0.7468</td>
-    <td align="center">0.7102</td>
-    </tr>
-    <tr class="odd">
-    <td align="center"><strong>godin_score</strong></td>
-    <td align="center">19</td>
-    <td align="center">91</td>
-    <td align="center">72</td>
-    <td align="center">0.06941</td>
-    <td align="center">-1.121</td>
     <td align="center">5.665</td>
+    <td align="center">27</td>
     </tr>
     </tbody>
     </table>
@@ -612,7 +320,7 @@ exercise_data <- select(data, exercise_vars)
 # function for doing the ttest
 desttest <- function(cols, data) {
     data[, cols] %>%
-    describe() %>%
+    describe(skew=FALSE, ranges = FALSE, IQR = TRUE) %>%
     pander()
   
   t.test(data[, cols[1]], 

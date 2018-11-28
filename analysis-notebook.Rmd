@@ -11,6 +11,10 @@ output:
 
 **Citation**: Weng, T. B., Pierce, G. L., Darling, W. G., & Voss, M. W. (2015). Differential effects of acute exercise on distinct aspects of executive function. Medicine and science in sports and exercise, 47(7), 1460-1469.
 
+**Code reviews for this notebook**
+* James Kent
+* Tim Weng
+
 
 # setup
 Clear previous, load packages
@@ -52,8 +56,8 @@ write.csv(data,"acute_beh_data_weng-etal-2015.csv", row.names = FALSE)
 demogs <- data %>% 
         select(age,gender,edu,height,weight,bmi,godin_score) 
 
-pander(describe(demogs))
-pander(describeBy(demogs,group="gender"))
+pander(describe(demogs, skew=FALSE, ranges = FALSE, IQR = TRUE))
+pander(describeBy(demogs, skew=FALSE, ranges = FALSE, IQR = TRUE, group = "gender"))
 ```
 
 
@@ -69,7 +73,7 @@ exercise_data <- select(data, exercise_vars)
 # function for doing the ttest
 desttest <- function(cols, data) {
     data[, cols] %>%
-    describe() %>%
+    describe(skew=FALSE, ranges = FALSE, IQR = TRUE) %>%
     pander()
   
   t.test(data[, cols[1]], 
