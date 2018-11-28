@@ -6,11 +6,11 @@ Nov 2018
 -   [setup](#setup)
 -   [demographics in Table 1](#demographics-in-table-1)
 -   [paired t-tests for exercise conditions](#paired-t-tests-for-exercise-conditions)
--   [Cognitive outcomes](#cognitive-outcomes)
+-   [cognitive outcomes (n-back, flanker)](#cognitive-outcomes-n-back-flanker)
 
 **Citation**: Weng, T. B., Pierce, G. L., Darling, W. G., & Voss, M. W. (2015). Differential effects of acute exercise on distinct aspects of executive function. Medicine and science in sports and exercise, 47(7), 1460-1469.
 
-**Code reviews for this notebook** \* James Kent \* Tim Weng
+**Code reviews for this notebook**: </br> \* James Kent, Tim Weng
 
 setup
 =====
@@ -425,8 +425,8 @@ desttest(c("avgfs_passive", "avgfs_active"), exercise_data)
     ## mean of the differences 
     ##               0.6653846
 
-Cognitive outcomes
-==================
+cognitive outcomes (n-back, flanker)
+====================================
 
 -   percdiff=((post-pre)/pre)\*100
 
