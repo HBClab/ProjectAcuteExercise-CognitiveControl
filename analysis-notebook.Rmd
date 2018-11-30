@@ -36,8 +36,8 @@ library(lsmeans)
 ```
 
 
-## Load data from an spss file
-Do not show in knit
+## load data from an spss file
+do not show in knit
 
 ```{r, include=FALSE}
 data <- read.spss("acute_beh_analysis_50.sav", use.value.labels = TRUE, to.data.frame = TRUE)

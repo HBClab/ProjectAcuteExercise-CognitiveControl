@@ -4,7 +4,7 @@ Michelle Voss
 Nov 2018
 
 -   [setup](#setup)
-    -   [Load data from an spss file](#load-data-from-an-spss-file)
+    -   [load data from an spss file](#load-data-from-an-spss-file)
 -   [demographics in Table 1](#demographics-in-table-1)
 -   [paired t-tests for exercise conditions](#paired-t-tests-for-exercise-conditions)
     -   [Exercise HR](#exercise-hr)
@@ -30,10 +30,10 @@ setup
 
 Clear previous, load packages
 
-Load data from an spss file
+load data from an spss file
 ---------------------------
 
-Do not show in knit
+do not show in knit
 
 demographics in Table 1
 =======================
