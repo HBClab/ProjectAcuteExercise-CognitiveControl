@@ -5,7 +5,7 @@ date: "Nov 2018"
 output:
   github_document:
     toc: true
-    toc_depth: 1
+    toc_depth: 3
     html_preview: false
 ---
 
