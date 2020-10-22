@@ -31,6 +31,7 @@ library(afex)
 library(tidyverse)  #load last, and dplyr comes with it
 library(foreign)
 library(jtools)
+library(interactions)
 library(pander)
 library(lsmeans)
 ```
@@ -67,7 +68,10 @@ pander(describeBy(demogs, skew=FALSE, ranges = FALSE, IQR = TRUE, group = "gende
 ```{r}
 # get columns that match this pattern (| means "or")
 exercise_vars <- grep(names(data), pattern = "^sub$|^exclude$|^countergroup$|active$|passive$|act$|pass$")
+
 exercise_data <- select(data, exercise_vars)
+write.csv(data,"exercise_data.csv", row.names = FALSE)
+
 
 # function for doing the ttest
 desttest <- function(cols, data) {
@@ -80,12 +84,30 @@ desttest <- function(cols, data) {
          paired=TRUE, 
          conf.level=0.95)
 }
+
+# compare t-test function to jamovi
+library(jmv)
 ```
 
 ## Exercise HR
 ```{r}
 desttest(c("avghr_passive", "avghr_active"), exercise_data)
 ```
+
+
+```{r}
+# jamovi call: assumes wide data format
+
+ttestPS(exercise_data,
+        meanDiff=TRUE,
+        norm=TRUE,
+        wilcoxon=TRUE,
+        effectSize=TRUE,
+        pairs = list(
+          list(i1="avghr_passive",i2="avghr_active")
+))
+```
+
 
 ## Exercise %HRmax
 ```{r}
@@ -120,13 +142,14 @@ desttest(c("avgfs_passive", "avgfs_active"), exercise_data)
 
 ## n-back
 ```{r}
+# uses gather to transform from wide to long
 nback_prepost <- data %>%
         filter(exclude == "include") %>%
         select(sub, countergroup, pre_passive_1b_acc:percdiff_active_2b_rt) %>%
         select(sub, countergroup, matches("pre|post")) %>%
         gather(key=condition, value=perf, -sub, -countergroup)
 
-# now split condition column up to it's factors
+# now split condition column up to its factors
 nback_prepost <- separate(nback_prepost, "condition", c("time", "intensity", "load", "dvtype"), "_")
 
 write.csv(nback_prepost, "acute_nback-prepost_weng-etal-2015.csv", row.names=FALSE)
@@ -310,6 +333,52 @@ summary(lm_acc)
 ```{r}
 cat_plot(lm_acc, pred = time, modx = intensity, mod2 = load, geom = "line")
 ```
+
+
+```{r}
+exercise_data <- subset(exercise_data, exclude == "include")
+
+jmv::anovaRM(
+    data = data,
+    rm = list(
+        list(
+            label="intensity",
+            levels=c("passive", "active")),
+        list(
+            label="load",
+            levels=c("1back", "2back")),
+        list(
+            label="time",
+            levels=c("pre", "post"))),
+    rmCells = list(
+        list(
+            measure="pre_passive_1b_acc",
+            cell=c("passive", "1back", "pre")),
+        list(
+            measure="post_passive_1b_acc",
+            cell=c("passive", "1back", "post")),
+        list(
+            measure="pre_passive_2b_acc",
+            cell=c("passive", "2back", "pre")),
+        list(
+            measure="post_passive_2b_acc",
+            cell=c("passive", "2back", "post")),
+        list(
+            measure="pre_active_1b_acc",
+            cell=c("active", "1back", "pre")),
+        list(
+            measure="post_active_1b_acc",
+            cell=c("active", "1back", "post")),
+        list(
+            measure="pre_active_2b_acc",
+            cell=c("active", "2back", "pre")),
+        list(
+            measure="post_active_2b_acc",
+            cell=c("active", "2back", "post"))),
+    effectSize = "partEta",
+    rmTerms = ~ intensity + load + time + intensity:load + intensity:time + load:time + intensity:load:time)
+```
+
 
 
 ## flanker
